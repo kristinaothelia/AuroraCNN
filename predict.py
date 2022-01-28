@@ -194,11 +194,11 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
         #log = open(self.checkpoint_dir / "log_test.txt", "w")
         #log = open(save_path / "log_test.txt", "w")
-        savetxt = os.path.join("datasets/predicted/test/"+model_name[-2:]+"/", "log_test.txt")
-        #if not os.path.isdir(save_path):
-        if not os.path.exists(savetxt):
-            #os.mkdir(save_path)
-            os.makedirs(savetxt)
+        savetxt = os.path.join(save_path, "log_test.txt")
+        if not os.path.isdir(save_path):
+        #if not os.path.exists(savetxt):
+            os.mkdir(save_path)
+            #os.makedirs(savetxt)
         log = open(savetxt, "w")
         log.write(str(today))
         log.write("f1 score (all classes): {}\n".format(f1))
