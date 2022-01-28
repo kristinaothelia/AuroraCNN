@@ -175,6 +175,14 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         CM, acc, acc_w, f1, report = metrics(y_true, y_pred)
         print(report)
 
+        name = os.path.join(save_path, "log.txt")
+        log = open(name, "w")
+        log.write(str(today))
+        log.write("\nf1 score (all classes): {}\n".format(f1))
+        log.write("acc (w): {}. acc:{}\n\n".format(acc_w, acc))
+        log.write(report)
+        log.close()
+
         # Normalized
         N_cm = CM/CM.sum(axis=1)[:, np.newaxis]
         class_names = [r'no aurora', r'arc', r'diffuse', r'discrete']
@@ -190,15 +198,6 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         #plt.show(block=True)
         plt.tight_layout()
         plt.savefig(str(save_path) + "CM_normalized_test.png")
-
-        name = os.path.join(save_path, "log.txt")
-        log = open(name, "w")
-        log.write(str(today))
-        log.write("\nf1 score (all classes): {}\n".format(f1))
-        log.write("acc (w): {}. acc:{}\n\n".format(acc_w, acc))
-        log.write(report)
-        log.close()
-
 
 
 # make predictions with chosen model and data set
