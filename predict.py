@@ -8,7 +8,7 @@ import pandas as pd
 import seaborn as sns
 import termplotlib as tpl
 
-from datetime import date
+from datetime import datetime
 from typing import Union
 from pathlib import Path
 
@@ -56,14 +56,15 @@ model_names = ['efficientnet-b0', 'efficientnet-b1', 'efficientnet-b2', 'efficie
 
 def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
-    today = date.today()
+    #today = date.today()
     if test:
-        save_path = 'datasets/predicted/test/'+model_name[-2:]+'/'+str(today)+'/'
+        #save_path = Path('datasets/predicted/test/'+model_name[-2:]+'/'+str(today)+'/')
+        save_path = Path('datasets/predicted/test/') / Path(model_name[-2:]) / Path(datetime.today().strftime('%Y-%m-%d')) #/ Path('/')
     else:
-        save_path = 'datasets/predicted/'+model_name[-2:]+'/'+str(today)+'/'
-    save = save_path+save_file
-
-    save = Path(save)# / Path(datetime.today().strftime('%Y-%m-%d'))
+        #save_path = Path('datasets/predicted/'+model_name[-2:]+'/'+str(today)+'/')
+        save_path = Path('datasets/predicted/') / Path(model_name[-2:]) / Path(datetime.today().strftime('%Y-%m-%d')) #/ Path('/')
+    #save = save_path+save_file
+    save = save_path / Path(save_file)
 
     img_size = efficientnet_params(model_name)['resolution']
 
@@ -172,7 +173,7 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         print(report)
 
         #log = open(self.checkpoint_dir / "log_test.txt", "w")
-        log = open(save_path+"log_test.txt", "w")
+        log = open(save_path / Path("log_test.txt"), "w")
         log.write("f1 score (all classes): {}\n".format(f1))
         log.write("acc (w): {}. acc:{}\n\n".format(acc_w, acc))
         log.write(best_report)
@@ -192,7 +193,7 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         plt.title(r'Norm. confusion matrix for EfficientNet model B{}'.format(self.model_info[-2])+'\n'+r'Test accuracy: {:.2f}'.format(acc),fontsize=14)
         #plt.show(block=True)
         plt.tight_layout()
-        plt.savefig(save_path+"CM_normalized_test.png")
+        plt.savefig(save_path / Path("CM_normalized_test.png"))
         #plt.savefig(str(self.checkpoint_dir) + "/CM_normalized_test.png")
 
 
