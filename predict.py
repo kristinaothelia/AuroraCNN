@@ -66,7 +66,6 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         #save_path = Path('datasets/predicted/') / Path(model_name[-2:]) / Path(datetime.today().strftime('%Y-%m-%d')) #/ Path('/')
     #save = save_path+save_file
     #save = save_path / Path(save_file)
-
     save = os.path.join(save_path, save_file)
 
     img_size = efficientnet_params(model_name)['resolution']
@@ -186,7 +185,7 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         heatmap.xaxis.set_ticklabels(heatmap.xaxis.get_ticklabels(), rotation=45, ha='right',fontsize=12)
         plt.ylabel(r'Observed class',fontsize=13) # True label
         plt.xlabel(r'Predicted class',fontsize=13)
-        plt.title(r'Norm. confusion matrix for EfficientNet model B{}'.format(self.model_info[-2])+'\n'+r'Test accuracy: {:.2f}'.format(acc),fontsize=14)
+        plt.title(r'Norm. confusion matrix for EfficientNet model B{}'.format(model_name[-2:])+'\n'+r'Test accuracy: {:.2f}'.format(acc),fontsize=14)
         #plt.show(block=True)
         plt.tight_layout()
         plt.savefig(str(save_path) + "CM_normalized_test.png")
