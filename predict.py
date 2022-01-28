@@ -98,13 +98,19 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
                 pred = model(x).to('cpu')
                 pred = torch.softmax(pred, dim=-1)
+                print(pred)
+                print('--')
                 prediction = torch.argmax(pred, dim=-1) # out
 
                 true = entry.label  # true class
 
-                print(prediction, true)
+                print(prediction)
+                print('--')
+                print(true)
+                print('--')
 
-                #ground_truths = torch.argmax(true, dim=1) # true class
+                ground_truths = torch.argmax(true, dim=1) # true class
+                print(ground_truths)
 
                 # Update y_pred and y_true
                 y_pred.extend(prediction)
