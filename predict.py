@@ -100,7 +100,8 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
                 pred = torch.softmax(pred, dim=-1)
                 prediction = torch.argmax(pred, dim=-1) # out
 
-                #true = entry.label  # true class
+                # Update y_pred and y_true
+                y_pred.append(prediction.numpy())
 
                 if entry.label == LABELS[0]:
                     #y_true.append(torch.tensor([0]))
@@ -114,22 +115,6 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
                 else:
                     #y_true.append(torch.tensor([3]))
                     y_true.append(3)
-
-                # tensor_array.cpu().detach().numpy()
-
-                print(y_true)
-                print(prediction.numpy())
-                #print(true)
-
-                # Update y_pred and y_true
-                #y_pred.extend(prediction)
-                #y_true.extend(true)
-
-                y_pred.append(prediction)
-                #y_true.append(true)
-
-                #y_pred.extend(prediction.item() for prediction in out)
-                #y_true.extend(true.item() for true in ground_truths)
 
                 for i, label_pred in enumerate(pred[0]):
                     score[LABELS[i]] = float(label_pred)
@@ -165,8 +150,6 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
     if test:
         print(len(y_pred))
         print(len(y_true))
-        print(y_pred[0], y_pred[1])
-        print(y_true[0], y_true[1])
 
         def metrics(y_true, y_pred):
             report = sk.metrics.classification_report(y_true, y_pred, target_names=['no a','arc','diff','disc'])
