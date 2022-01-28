@@ -206,7 +206,7 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         log.write(str(today))
         log.write("f1 score (all classes): {}\n".format(f1))
         log.write("acc (w): {}. acc:{}\n\n".format(acc_w, acc))
-        log.write(best_report)
+        log.write(report)
         log.close()
 
 
