@@ -4,7 +4,13 @@ import torchvision.transforms.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
+import pandas as pd
+import seaborn as sns
+import termplotlib as tpl
+
 from datetime import date
+from typing import Union
+from pathlib import Path
 
 import sklearn as sk
 from sklearn.metrics import f1_score, accuracy_score, balanced_accuracy_score
@@ -56,6 +62,8 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
     else:
         save_path = 'datasets/predicted/'+model_name[-2:]+'/'+str(today)+'/'
     save = save_path+save_file
+
+    save = Path(save)# / Path(datetime.today().strftime('%Y-%m-%d'))
 
     img_size = efficientnet_params(model_name)['resolution']
 
