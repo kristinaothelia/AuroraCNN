@@ -111,9 +111,10 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
                 else:
                     y_true.append(torch.tensor([3]))
 
+                # tensor_array.cpu().detach().numpy()
 
-                print(y_true)
-                print(prediction)
+                print(y_true.numpy())
+                print(prediction.numpy())
                 #print(true)
 
                 # Update y_pred and y_true
