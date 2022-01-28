@@ -156,7 +156,7 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
     # save file with predictions
     #container.to_json(path='./datasets/Full_aurora_predicted.json')
     #container.to_json(path=save_file)
-    container.to_json(path="datasets/preicted/"+save_file)
+    container.to_json(path="datasets/predicted/"+save_file)
 
     # additional metrics
     if test:
