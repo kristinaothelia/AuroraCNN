@@ -177,7 +177,8 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
         #log = open(self.checkpoint_dir / "log_test.txt", "w")
         #log = open(save_path / "log_test.txt", "w")
-        log = open(save_path + "\log_test.txt", "w")
+        savetxt = os.path.join(save_path, "log_test.txt")
+        log = open(savetxt, "w")
         log.write("f1 score (all classes): {}\n".format(f1))
         log.write("acc (w): {}. acc:{}\n\n".format(acc_w, acc))
         log.write(best_report)
