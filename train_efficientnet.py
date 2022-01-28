@@ -73,7 +73,7 @@ def train(model, json_file, model_name, mode, w_sampler=False, no_weights=False,
 
     clear, arc, diff, disc = count(train)
     class_weights = [clear/clear, (clear/arc)*1, (clear/diff)*1, (clear/disc)*1]
-    class_weights = [clear/clear, (clear/arc)*1.5, (clear/diff)*1.5, (clear/disc)*1.5]
+    #class_weights = [clear/clear, (clear/arc)*1.5, (clear/diff)*1.5, (clear/disc)*1.5]
     print("class count, train: ", [clear, arc, diff, disc])
     print("weights, train:     ", class_weights)
 
@@ -230,7 +230,12 @@ model = EfficientNet.from_name(model_name=MN, num_classes=4, in_channels=1)
 #train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=300, batch_size_train=24, learningRate=0.1, stepSize=50, g=0.5)
 #train(model, json_file, MN, mode='bilinear', w_sampler=True, ep=300, batch_size_train=24, learningRate=0.1, stepSize=50, g=0.5)
 
-train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=300, batch_size_train=24, learningRate=0.01, stepSize=75, g=0.1)
+train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=200, batch_size_train=24, learningRate=0.01, stepSize=75, g=0.1)
+train(model, json_file, MN, mode='bilinear', w_sampler=True, ep=200, batch_size_train=24, learningRate=0.01, stepSize=75, g=0.1)
+train(model, json_file, MN, mode='bicubic', w_sampler=False, ep=200, batch_size_train=24, learningRate=0.01, stepSize=75, g=0.1)
+
+train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=200, batch_size_train=16, learningRate=0.01, stepSize=75, g=0.1)
+train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=200, batch_size_train=32, learningRate=0.01, stepSize=75, g=0.1)
 
 #model = EfficientNet.from_name(model_name=model_name[4], num_classes=4, in_channels=1)
 #train(model, json_file, model_name[4], mode='bilinear', w_sampler=False, ep=200, batch_size_train=24, learningRate=0.1, stepSize=75, g=0.4)
