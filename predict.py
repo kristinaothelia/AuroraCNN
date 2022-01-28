@@ -240,7 +240,7 @@ def Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS):
 
     predict(model_name, model_path, container, LABELS, save_file)
 
-Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS)
+#Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS)
 Test(model_name, model_path, LABELS)
 
 
