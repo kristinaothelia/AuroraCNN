@@ -98,13 +98,20 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
                 pred = model(x).to('cpu')
                 pred = torch.softmax(pred, dim=-1)
-                prediction = torch.argmax(pred, dim=-1)
+                prediction = torch.argmax(pred, dim=-1) # out
 
-                true = entry.label
+                true = entry.label  # true class
+
+                print(prediction, true)
+
+                #ground_truths = torch.argmax(true, dim=1) # true class
 
                 # Update y_pred and y_true
                 y_pred.extend(prediction)
                 y_true.extend(true)
+
+                #y_pred.extend(prediction.item() for prediction in out)
+                #y_true.extend(true.item() for true in ground_truths)
 
                 for i, label_pred in enumerate(pred[0]):
                     score[LABELS[i]] = float(label_pred)
@@ -217,7 +224,7 @@ def Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS):
 
     predict(model_name, model_path, container, LABELS, save_file)
 
-Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS)
+#Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS)
 Test(model_name, model_path, LABELS)
 
 """
