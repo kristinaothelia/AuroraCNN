@@ -138,6 +138,8 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
     # additional metrics
     if test:
+        print(len(y_pred))
+        print(len(y_true))
         def metrics(y_true, y_pred):
             report = sk.metrics.classification_report(y_true, y_pred, target_names=['no a','arc','diff','disc'])
             f1 = f1_score(y_true, y_pred, average=None) #The best value is 1 and the worst value is 0
