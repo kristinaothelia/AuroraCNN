@@ -59,14 +59,16 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
     today = date.today()
     if test:
-        save_path = '/datasets/predicted/test/'+model_name[-2:]+'/'+str(today)+'/'
+        save_path = '/datasets/predicted/test/'+model_name[-2:]+'/'
         #save_path = Path('datasets/predicted/test/') / Path(model_name[-2:]) / Path(datetime.today().strftime('%Y-%m-%d')) #/ Path('/')
     else:
-        save_path = '/datasets/predicted/'+model_name[-2:]+'/'+str(today)+'/'
+        save_path = '/datasets/predicted/'+model_name[-2:]+'/'
         #save_path = Path('datasets/predicted/') / Path(model_name[-2:]) / Path(datetime.today().strftime('%Y-%m-%d')) #/ Path('/')
     #save = save_path+save_file
     #save = save_path / Path(save_file)
     save = os.path.join(save_path, save_file)
+    print(save_file)
+    exit()
 
     img_size = efficientnet_params(model_name)['resolution']
 
@@ -155,7 +157,8 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
     # save file with predictions
     #container.to_json(path='./datasets/Full_aurora_predicted.json')
-    container.to_json(path=save_file)
+    #container.to_json(path=save_file)
+    container.to_json(path="datasets/preicted/"+save_file)
 
     # additional metrics
     if test:
