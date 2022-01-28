@@ -59,10 +59,10 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
     today = date.today()
     if test:
-        save_path = Path('/datasets/predicted/test/'+model_name[-2:]+'/'+str(today)+'/')
+        save_path = '/datasets/predicted/test/'+model_name[-2:]+'/'+str(today)+'/'
         #save_path = Path('datasets/predicted/test/') / Path(model_name[-2:]) / Path(datetime.today().strftime('%Y-%m-%d')) #/ Path('/')
     else:
-        save_path = Path('/datasets/predicted/'+model_name[-2:]+'/'+str(today)+'/')
+        save_path = '/datasets/predicted/'+model_name[-2:]+'/'+str(today)+'/'
         #save_path = Path('datasets/predicted/') / Path(model_name[-2:]) / Path(datetime.today().strftime('%Y-%m-%d')) #/ Path('/')
     #save = save_path+save_file
     #save = save_path / Path(save_file)
@@ -177,10 +177,13 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
         #log = open(self.checkpoint_dir / "log_test.txt", "w")
         #log = open(save_path / "log_test.txt", "w")
-        savetxt = os.path.join(save_path, "log_test.txt")
-        if not os.path.isdir(save_path):
-            os.mkdir(save_path)
+        savetxt = os.path.join("datasets/predicted/test/"+model_name[-2:], "log_test.txt")
+        #if not os.path.isdir(save_path):
+        if not os.path.exists(savetxt):
+            #os.mkdir(save_path)
+            os.makedirs(savetxt)
         log = open(savetxt, "w")
+        log.write(str(today))
         log.write("f1 score (all classes): {}\n".format(f1))
         log.write("acc (w): {}. acc:{}\n\n".format(acc_w, acc))
         log.write(best_report)
