@@ -88,6 +88,8 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
     with torch.no_grad():
         for entry in tqdm(container):
 
+            print('--- ', entry.label, ' ---')
+
             if test:
 
                 score = dict()
@@ -98,7 +100,6 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
                 pred = model(x).to('cpu')
                 pred = torch.softmax(pred, dim=-1)
-                print(len(pred))
                 prediction = torch.argmax(pred, dim=-1) # out
 
                 true = entry.label  # true class
@@ -109,7 +110,7 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
                 print(true)
 
                 # Update y_pred and y_true
-                y_pred.extend(prediction)
+                y_pred.extend(LABELS[int(prediction[0])])
                 y_true.extend(true)
 
                 #y_pred.extend(prediction.item() for prediction in out)
@@ -149,6 +150,9 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
     if test:
         print(len(y_pred))
         print(len(y_true))
+        print(y_pred[0], y_pred[1])
+        print(y_true[0], y_true[1])
+
         def metrics(y_true, y_pred):
             report = sk.metrics.classification_report(y_true, y_pred, target_names=['no a','arc','diff','disc'])
             f1 = f1_score(y_true, y_pred, average=None) #The best value is 1 and the worst value is 0
