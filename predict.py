@@ -107,10 +107,6 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
                 print(prediction)
                 print('--')
                 print(true)
-                print('--')
-
-                ground_truths = torch.argmax(true, dim=1) # true class
-                print(ground_truths)
 
                 # Update y_pred and y_true
                 y_pred.extend(prediction)
