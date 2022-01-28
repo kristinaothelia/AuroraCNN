@@ -66,9 +66,7 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         #save_path = Path('datasets/predicted/') / Path(model_name[-2:]) / Path(datetime.today().strftime('%Y-%m-%d')) #/ Path('/')
     #save = save_path+save_file
     #save = save_path / Path(save_file)
-    save = os.path.join(save_path, save_file)
-    print(save_file)
-    exit()
+    #save = os.path.join(save_path, save_file)
 
     img_size = efficientnet_params(model_name)['resolution']
 
