@@ -158,9 +158,10 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
             accuracy_w = balanced_accuracy_score(y_true, y_pred) #The best value is 1 and the worst value is 0 when adjusted=False
             CM_sk = sk.metrics.confusion_matrix(y_true, y_pred, normalize='true')
 
-            return CM_sk, accuracy, accuracy_w, f1, f1_w, recall, precision, report
+            return CM_sk, accuracy, accuracy_w, f1, report
 
         CM, acc, acc_w, f1, report = metrics(y_true, y_pred)
+        print(report)
 
         #log = open(self.checkpoint_dir / "log_test.txt", "w")
         log = open(save_path+"log_test.txt", "w")
