@@ -103,17 +103,21 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
                 #true = entry.label  # true class
 
                 if entry.label == LABELS[0]:
-                    y_true.append(torch.tensor([0]))
+                    #y_true.append(torch.tensor([0]))
+                    y_true.append(0)
                 elif entry.label == LABELS[1]:
-                    y_true.append(torch.tensor([1]))
+                    #y_true.append(torch.tensor([1]))
+                    y_true.append(1)
                 elif entry.label == LABELS[2]:
-                    y_true.append(torch.tensor([2]))
+                    #y_true.append(torch.tensor([2]))
+                    y_true.append(2)
                 else:
-                    y_true.append(torch.tensor([3]))
+                    #y_true.append(torch.tensor([3]))
+                    y_true.append(3)
 
                 # tensor_array.cpu().detach().numpy()
 
-                print(y_true.numpy())
+                print(y_true)
                 print(prediction.numpy())
                 #print(true)
 
