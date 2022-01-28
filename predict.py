@@ -186,23 +186,13 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         heatmap.xaxis.set_ticklabels(heatmap.xaxis.get_ticklabels(), rotation=45, ha='right',fontsize=12)
         plt.ylabel(r'Observed class',fontsize=13) # True label
         plt.xlabel(r'Predicted class',fontsize=13)
-        plt.title(r'Norm. confusion matrix for EfficientNet model B{}'.format(model_name[-2:])+'\n'+r'Test accuracy: {:.2f}'.format(acc),fontsize=14)
+        plt.title(r'Norm. confusion matrix for EfficientNet model B{}'.format(model_name[-1])+'\n'+r'Test accuracy: {:.2f}'.format(acc),fontsize=14)
         #plt.show(block=True)
         plt.tight_layout()
         plt.savefig(str(save_path) + "CM_normalized_test.png")
-        #plt.savefig(str(self.checkpoint_dir) + "/CM_normalized_test.png")
 
-        #log = open(self.checkpoint_dir / "log_test.txt", "w")
-        #log = open(save_path / "log_test.txt", "w")
-        #savetxt = os.path.join(save_path, "log_test.txt")
-        #if not os.path.isdir(save_path):
-        #if not os.path.exists(savetxt):
-            #os.mkdir(save_path)
-            #os.makedirs(savetxt)
-        #log = open(savetxt, "w")
         name = os.path.join(save_path, "log.txt")
         log = open(name, "w")
-        #log = open(str(save_path)+"log_test.txt")
         log.write(str(today))
         log.write("f1 score (all classes): {}\n".format(f1))
         log.write("acc (w): {}. acc:{}\n\n".format(acc_w, acc))
@@ -251,7 +241,7 @@ def Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS):
 
     predict(model_name, model_path, container, LABELS, save_file)
 
-#Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS)
+Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS)
 Test(model_name, model_path, LABELS)
 
 """
