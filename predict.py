@@ -194,7 +194,7 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         name = os.path.join(save_path, "log.txt")
         log = open(name, "w")
         log.write(str(today))
-        log.write("f1 score (all classes): {}\n".format(f1))
+        log.write("\nf1 score (all classes): {}\n".format(f1))
         log.write("acc (w): {}. acc:{}\n\n".format(acc_w, acc))
         log.write(report)
         log.close()
