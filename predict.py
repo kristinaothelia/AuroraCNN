@@ -88,8 +88,6 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
     with torch.no_grad():
         for entry in tqdm(container):
 
-            print('--- ', entry.label, ' ---')
-
             if test:
 
                 score = dict()
@@ -102,16 +100,28 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
                 pred = torch.softmax(pred, dim=-1)
                 prediction = torch.argmax(pred, dim=-1) # out
 
-                true = entry.label  # true class
+                #true = entry.label  # true class
 
+                if entry.label == LABELS[0]:
+                    y_true.append(torch.tensor([0]))
+                elif entry.label == LABELS[1]:
+                    y_true.append(torch.tensor([1]))
+                elif entry.label == LABELS[2]:
+                    y_true.append(torch.tensor([2]))
+                else:
+                    y_true.append(torch.tensor([3]))
+
+
+                print(y_true)
                 print(prediction)
-                print(LABELS[int(prediction[0])])
-                print('--')
-                print(true)
+                #print(true)
 
                 # Update y_pred and y_true
-                y_pred.extend(LABELS[int(prediction[0])])
-                y_true.extend(true)
+                #y_pred.extend(prediction)
+                #y_true.extend(true)
+
+                y_pred.append(prediction)
+                #y_true.append(true)
 
                 #y_pred.extend(prediction.item() for prediction in out)
                 #y_true.extend(true.item() for true in ground_truths)
