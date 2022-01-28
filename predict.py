@@ -244,6 +244,8 @@ def Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS):
 Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS)
 Test(model_name, model_path, LABELS)
 
+
+
 """
 # Load json file to add predictions
 json_file = 'Aurora_G_omni_mean.json'
