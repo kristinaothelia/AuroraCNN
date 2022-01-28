@@ -132,7 +132,11 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
                     entry.human_prediction = False
                     entry.add_score(score)
 
-    # metrics
+    # save file with predictions
+    #container.to_json(path='./datasets/Full_aurora_predicted.json')
+    container.to_json(path=save_file)
+
+    # additional metrics
     if test:
         def metrics(y_true, y_pred):
             report = sk.metrics.classification_report(y_true, y_pred, target_names=['no a','arc','diff','disc'])
@@ -169,8 +173,6 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         plt.savefig(save_path+"CM_normalized_test.png")
         #plt.savefig(str(self.checkpoint_dir) + "/CM_normalized_test.png")
 
-    #container.to_json(path='./datasets/Full_aurora_predicted.json')
-    container.to_json(path=save_file)
 
 
 # make predictions with chosen model and data set
@@ -213,8 +215,8 @@ def Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS):
 
     predict(model_name, model_path, container, LABELS, save_file)
 
-Test(model_name, model_path, LABELS)
 Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS)
+Test(model_name, model_path, LABELS)
 
 """
 # Load json file to add predictions
