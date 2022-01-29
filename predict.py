@@ -175,6 +175,9 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         CM, acc, acc_w, f1, report = metrics(y_true, y_pred)
         print(report)
 
+        Path(save_path).mkdir(parents=True, exist_ok=True)
+        #if not os.path.exists(save_path):
+        #    os.mkdir(save_path)
         name = os.path.join(save_path, "log.txt")
         log = open(name, "w")
         log.write(str(today))
