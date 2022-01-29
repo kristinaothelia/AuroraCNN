@@ -249,10 +249,10 @@ def Test_B3():
     model_name = model_names[3]
     #model_path = "models/report/best_validation/checkpoint-best.pth"
 
-    model_path1 = "models\b3\bilinear\batch_size_24\lr_0.01\st_75\g_0.1_wFalse\2022-01-28\best_validation\checkpoint-best.pth"
-    model_path2 = "models\b3\bilinear\batch_size_24\lr_0.01\st_75\g_0.1_wTrue\2022-01-28\best_validation\checkpoint-best.pth"
-    model_path3 = "models\b3\bicubic\batch_size_24\lr_0.01\st_75\g_0.1_wFalse\2022-01-29\best_validation\checkpoint-best.pth"
-    model_path4 = "models\b3\bilinear\batch_size_16\lr_0.01\st_75\g_0.1_wFalse\2022-01-29\best_validation\checkpoint-best.pth"
+    model_path1 = "models/b3/bilinear/batch_size_24/lr_0.01/st_75/g_0.1_wFalse/2022-01-28/best_validation/checkpoint-best.pth"
+    model_path2 = "models/b3/bilinear/batch_size_24/lr_0.01/st_75/g_0.1_wTrue/2022-01-28/best_validation/checkpoint-best.pth"
+    model_path3 = "models/b3/bicubic/batch_size_24/lr_0.01/st_75/g_0.1_wFalse/2022-01-29/best_validation/checkpoint-best.pth"
+    model_path4 = "models/b3/bilinear/batch_size_16/lr_0.01/st_75/g_0.1_wFalse/2022-01-29/best_validation/checkpoint-best.pth"
 
     model_paths = [model_path1, model_path2, model_path3, model_path4]
     num = [0, 2, 3, 4]
