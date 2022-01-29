@@ -59,7 +59,7 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
     today = date.today()
     if test:
-        save_path = 'datasets/predicted/test/'+model_name[-2:]+'/'
+        save_path = 'datasets/predicted/test/'+model_name[-2:]+'/'+save_file[-6]+'/'
         #save_path = Path('datasets/predicted/test/') / Path(model_name[-2:]) / Path(datetime.today().strftime('%Y-%m-%d')) #/ Path('/')
     else:
         save_path = 'datasets/predicted/'+model_name[-2:]+'/'
@@ -200,6 +200,26 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         plt.savefig(str(save_path) + "CM_normalized_test.png")
 
 
+
+def Test(model_name, model_path, LABELS, num):
+
+    json_file = 'Full_aurora_ml_test_set.json'
+    container = DatasetContainer.from_json('datasets/'+json_file)
+    save_file = json_file[:-5]+'_predicted_'+model_name+'_'+str(num)+'.json'
+
+    predict(model_name, model_path, container, LABELS, save_file, test=True)
+
+
+def Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS):
+
+    json_file = 'Full_aurora_new_rt_ml.json'
+    container = DatasetContainer.from_json('datasets/'+json_file)
+
+    #save_file = mlnodes_path+json_file[:-5]+'_predicted_'+model_name+'.json'
+    save_file = json_file[:-5]+'_predicted_'+model_name+'_TESTNEW_.json'
+
+    predict(model_name, model_path, container, LABELS, save_file)
+
 # make predictions with chosen model and data set
 mlnodes_path = '/itf-fi-ml/home/koolsen/Master/'
 # Load a saved model. UPDATE
@@ -221,28 +241,33 @@ save_file = json_file[:-5]+'_predicted_'+model_name+'.json'
 predict(model_name, model_path, container, LABELS, save_file, test=True)
 """
 
-def Test(model_name, model_path, LABELS):
-
-    json_file = 'Full_aurora_ml_test_set.json'
-    container = DatasetContainer.from_json('datasets/'+json_file)
-    save_file = json_file[:-5]+'_predicted_'+model_name+'.json'
-
-    predict(model_name, model_path, container, LABELS, save_file, test=True)
-
-
-def Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS):
-
-    json_file = 'Full_aurora_new_rt_ml.json'
-    container = DatasetContainer.from_json('datasets/'+json_file)
-
-    #save_file = mlnodes_path+json_file[:-5]+'_predicted_'+model_name+'.json'
-    save_file = json_file[:-5]+'_predicted_'+model_name+'_TESTNEW_.json'
-
-    predict(model_name, model_path, container, LABELS, save_file)
-
 #Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS)
-Test(model_name, model_path, LABELS)
+#Test(model_name, model_path, LABELS)
 
+def Test_B3():
+
+    model_name = model_names[3]
+    #model_path = "models/report/best_validation/checkpoint-best.pth"
+
+    model_path1 = "models\b3\bilinear\batch_size_24\lr_0.01\st_75\g_0.1_wFalse\2022-01-28\best_validation\checkpoint-best.pth"
+    model_path2 = "models\b3\bilinear\batch_size_24\lr_0.01\st_75\g_0.1_wTrue\2022-01-28\best_validation\checkpoint-best.pth"
+    model_path3 = "models\b3\bicubic\batch_size_24\lr_0.01\st_75\g_0.1_wFalse\2022-01-29\best_validation\checkpoint-best.pth"
+    model_path4 = "models\b3\bilinear\batch_size_16\lr_0.01\st_75\g_0.1_wFalse\2022-01-29\best_validation\checkpoint-best.pth"
+
+    model_paths = [model_path1, model_path2, model_path3, model_path4]
+    num = [0, 2, 3, 4]
+
+    for i in range(len(model_paths)):
+        Test(model_name, model_paths[i], LABELS, num[i])
+
+Test_B3()
+
+def Test_B2():
+
+    model_name = model_names[2]
+    model_path = ""
+
+    Test(model_name, model_path, LABELS)
 
 
 """
