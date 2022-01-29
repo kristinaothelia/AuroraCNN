@@ -1,25 +1,25 @@
 Model 3
-Class weights [1.0, 5.81063122923588, 2.907730673316708, 2.1726708074534162]
-Training time [h]: 10.715778274138769
+Class weights [1.0, 3.87375415282392, 1.938487115544472, 1.448447204968944]
+Training time [h]: 7.118964615265528
 The number of params in Million: 10.70166
-Best epoch 162 of 300. Validation acc: 0.8997912317327766
-Training loss: 0.18312254849200446. Validation loss: 0.2669148187021579
+Best epoch 119 of 200. Validation acc: 0.9039665970772442
+Training loss: 0.22378462377625208. Validation loss: 0.25852521543085166
 Batch size (train): 24
 Other model info: lr:0.01, step:75, gamma:0.1
-V.acc all 200 epochs: 0.8523219670610067 pm 0.09261574238198893
+V.acc all 200 epochs: 0.8428183716075156 pm 0.10941531651538909
 
-recall: 0.8997912317327766
-precision: 0.9093795524154258
-f1 score (all classes): [0.95119934 0.78769231 0.82249561 0.92347601]
-f1 score (w): 0.9024864854220446. acc (w): 0.8942649493059198
+recall: 0.9039665970772442
+precision: 0.9072413328322816
+f1 score (all classes): [0.95645161 0.82236842 0.8113879  0.91927083]
+f1 score (w): 0.9047681617443784. acc (w): 0.888914242038702
 
               precision    recall  f1-score   support
 
-        no a       0.98      0.93      0.95       620
-         arc       0.69      0.92      0.79       139
-        diff       0.82      0.83      0.82       282
-        disc       0.95      0.90      0.92       396
+        no a       0.96      0.96      0.96       620
+         arc       0.76      0.90      0.82       139
+        diff       0.81      0.81      0.81       282
+        disc       0.95      0.89      0.92       396
 
     accuracy                           0.90      1437
-   macro avg       0.86      0.89      0.87      1437
+   macro avg       0.87      0.89      0.88      1437
 weighted avg       0.91      0.90      0.90      1437
