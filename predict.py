@@ -259,11 +259,11 @@ def Test_B3():
     #model_path4 = "models/b3/bilinear/batch_size_16/lr_0.01/st_75/g_0.1_wFalse/2022-01-29/best_validation/checkpoint-best.pth"
 
     num = [5, 6, 7]
-    model_path2 = "models/b3/bicubic/batch_size_24/lr_0.01/st_75/g_0.1_wFalse/2022-01-30/best_validation/checkpoint-best.pth"
-    model_path3 = "models/b3/bilinear/batch_size_24/lr_0.01/st_75/g_0.1_wFalse/2022-01-29/best_validation/checkpoint-best.pth"
-    model_path4 = "models/b3/bilinear/batch_size_24/lr_0.01/st_75/g_0.1_wTrue/2022-01-30/best_validation/checkpoint-best.pth"
+    model_path1 = "models/b3/bicubic/batch_size_24/lr_0.01/st_75/g_0.1_wFalse/2022-01-30/best_validation/checkpoint-best.pth"
+    model_path2 = "models/b3/bilinear/batch_size_24/lr_0.01/st_75/g_0.1_wFalse/2022-01-29/best_validation/checkpoint-best.pth"
+    model_path3 = "models/b3/bilinear/batch_size_24/lr_0.01/st_75/g_0.1_wTrue/2022-01-30/best_validation/checkpoint-best.pth"
 
-    model_paths = [model_path1, model_path2, model_path3, model_path4]
+    model_paths = [model_path1, model_path2, model_path3]
 
     for i in range(len(model_paths)):
         Test(model_name, model_paths[i], LABELS, num[i])
@@ -272,7 +272,7 @@ def Test_B2():
 
     num = 8
     model_name = model_names[2]
-    model_path = model_path1 = "models/b2/bilinear/batch_size_32/lr_0.01/st_75/g_0.1_wFalse/2022-01-31/best_validation/checkpoint-best.pth"
+    model_path = "models/b2/bilinear/batch_size_32/lr_0.01/st_75/g_0.1_wFalse/2022-01-31/best_validation/checkpoint-best.pth"
 
     Test(model_name, model_path, LABELS, num)
 
