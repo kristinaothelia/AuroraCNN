@@ -63,7 +63,7 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         #save_path = Path('datasets/predicted/test/') / Path(model_name[-2:]) / Path(datetime.today().strftime('%Y-%m-%d')) #/ Path('/')
     else:
         #save_path =
-        save_file = mlnodes_path+json_file[:-5]+'_predicted_'+model_name+'.json'
+        save_file = save_file
         #save_path = 'datasets/predicted/'+model_name[-2:]+'/'
         #save_path = Path('datasets/predicted/') / Path(model_name[-2:]) / Path(datetime.today().strftime('%Y-%m-%d')) #/ Path('/')
     #save = save_path+save_file
