@@ -16,14 +16,14 @@ from pylab import *
 LABELS = ['aurora-less', 'arc', 'diffuse', 'discrete']
 
 # All 4 years, jan+nov+dec
-predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b2.json'
+predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3.json'
 container_Full = DatasetContainer.from_json(predicted_G_Full)
 print("len container Full: ", len(container_Full))
 
-split_day = False
+split_day = True
 if split_day:
-    container_D = DatasetContainer.from_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b2_daytime.json')
-    container_N = DatasetContainer.from_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b2_nighttime.json')
+    container_D = DatasetContainer.from_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_daytime.json')
+    container_N = DatasetContainer.from_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_nighttime.json')
 
     print('len container day:   ', len(container_D))
     print('len container night: ', len(container_N))
@@ -82,6 +82,8 @@ def omni_ting(container, year_='2014', year=False):
     disc_NEG = []; disc_POS = []
 
     input = 'Bz, nT (GSM)'
+    input_err = 'Bz, nT (GSM), SD'
+    a_less_NEG_err = []; a_less_POS_err = []
 
     if year:
         for entry in container:
@@ -89,8 +91,10 @@ def omni_ting(container, year_='2014', year=False):
                 if entry.label == LABELS[0]:
                     if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
                         a_less_POS.append(float(entry.solarwind[input]))
+                        a_less_POS_err.append(float(entry.solarwind[input_err]))
                     else:
                         a_less_NEG.append(float(entry.solarwind[input]))
+                        a_less_NEG_err.append(float(entry.solarwind[input_err]))
 
                 elif entry.label == LABELS[1]:
                     if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
@@ -115,8 +119,10 @@ def omni_ting(container, year_='2014', year=False):
             if entry.label == LABELS[0]:
                 if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
                     a_less_POS.append(float(entry.solarwind[input]))
+                    a_less_POS_err.append(float(entry.solarwind[input_err]))
                 else:
                     a_less_NEG.append(float(entry.solarwind[input]))
+                    a_less_NEG_err.append(float(entry.solarwind[input_err]))
 
             elif entry.label == LABELS[1]:
                 if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
@@ -136,7 +142,7 @@ def omni_ting(container, year_='2014', year=False):
                 else:
                     disc_NEG.append(float(entry.solarwind[input]))
 
-    return a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG#, neg, pos
+    return a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG, a_less_POS_err, a_less_NEG_err
 
 def sub_plots(year, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=None, month_name=None,  N=4, shape='*-'):
 
@@ -516,13 +522,13 @@ def Bz_stats(year):
     plt.figure(figsize=(8, 11)) # bredde, hoyde
 
     if year == 'All years':
-        a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG = omni_ting(container_Full)
-        a_less_POS_D, a_less_NEG_D, arc_POS_D, arc_NEG_D, diff_POS_D, diff_NEG_D, disc_POS_D, disc_NEG_D = omni_ting(container_D)
-        a_less_POS_N, a_less_NEG_N, arc_POS_N, arc_NEG_N, diff_POS_N, diff_NEG_N, disc_POS_N, disc_NEG_N = omni_ting(container_N)
+        a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG, a_less_POS_err, a_less_NEG_err = omni_ting(container_Full)
+        a_less_POS_D, a_less_NEG_D, arc_POS_D, arc_NEG_D, diff_POS_D, diff_NEG_D, disc_POS_D, disc_NEG_D, a_less_POS_err, a_less_NEG_err = omni_ting(container_D)
+        a_less_POS_N, a_less_NEG_N, arc_POS_N, arc_NEG_N, diff_POS_N, diff_NEG_N, disc_POS_N, disc_NEG_N, a_less_POS_err, a_less_NEG_err = omni_ting(container_N)
     else:
-        a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG = omni_ting(container_Full, year, True)
-        a_less_POS_D, a_less_NEG_D, arc_POS_D, arc_NEG_D, diff_POS_D, diff_NEG_D, disc_POS_D, disc_NEG_D = omni_ting(container_D, year, True)
-        a_less_POS_N, a_less_NEG_N, arc_POS_N, arc_NEG_N, diff_POS_N, diff_NEG_N, disc_POS_N, disc_NEG_N = omni_ting(container_N, year, True)
+        a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG, a_less_POS_err, a_less_NEG_err = omni_ting(container_Full, year, True)
+        a_less_POS_D, a_less_NEG_D, arc_POS_D, arc_NEG_D, diff_POS_D, diff_NEG_D, disc_POS_D, disc_NEG_D, a_less_POS_err, a_less_NEG_err = omni_ting(container_D, year, True)
+        a_less_POS_N, a_less_NEG_N, arc_POS_N, arc_NEG_N, diff_POS_N, diff_NEG_N, disc_POS_N, disc_NEG_N, a_less_POS_err, a_less_NEG_err = omni_ting(container_N, year, True)
 
     '''
     a_less = [a_less_Day, a_less_Night]
@@ -537,16 +543,16 @@ def Bz_stats(year):
 
     #sub_plots_Bz(year, a_less, arc, diff, disc, neg, pos)
 
-    #plt.savefig("stats/Green/b2/yearly_Bz_plot_{}.png".format(year), bbox_inches="tight")
-    plt.show()
+    #plt.savefig("stats/Green/b3/yearly_Bz_plot_{}.png".format(year), bbox_inches="tight")
+    #plt.show()
 
 '''
 Bz_stats(year='2014')
 Bz_stats(year='2016')
 Bz_stats(year='2018')
 Bz_stats(year='2020')
+Bz_stats(year='All years')
 '''
-#Bz_stats(year='All years')
 
 def Bz_split(container, year_="All years", month=False, year=False):
 
@@ -555,7 +561,7 @@ def Bz_split(container, year_="All years", month=False, year=False):
     plt.text(1.5, -1.8, 'nightside', fontsize = 13, color='deepskyblue')
     plt.text(10.9, -1.8, 'dayside', fontsize = 13, color='limegreen')
     plt.text(19.1, -1.8, 'nightside', fontsize = 13, color='deepskyblue')
-    plt.savefig('stats/Green/b2/TEST_{}.png'.format(year_), bbox_inches="tight")
+    plt.savefig('stats/Green/b3/TEST_{}.png'.format(year_), bbox_inches="tight")
     #plt.show()
 
 Bz_split(container=container_Full)

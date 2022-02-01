@@ -13,14 +13,14 @@ from pylab import *
 LABELS = ['aurora-less', 'arc', 'diffuse', 'discrete']
 
 # All 4 years, jan+nov+dec
-predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b2.json'
+predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3.json'
 container_Full = DatasetContainer.from_json(predicted_G_Full)
 print("len container Full: ", len(container_Full))
 
-split_day = False
+split_day = True
 if split_day:
-    container_D = DatasetContainer.from_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b2_daytime.json')
-    container_N = DatasetContainer.from_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b2_nighttime.json')
+    container_D = DatasetContainer.from_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_daytime.json')
+    container_N = DatasetContainer.from_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_nighttime.json')
 
     print('len container day:   ', len(container_D))
     print('len container night: ', len(container_N))
@@ -285,7 +285,7 @@ def bar_chart(container, labels, year, wl, a_less=True, month=False):
 
             plt.title(r"Distribution of predicted aurora classes, {}".format(wl[0]), fontsize=16)
             ax.set_xticks(ind+width)
-            ax.legend((rects2[0], rects3[0], rects4[0]), (r'arc', r'diffuse', r'discrete'), fancybox=True, shadow=True, ncol=1, fontsize=11)
+            ax.legend((rects2[0], rects3[0], rects4[0]), (r'arc', r'diffuse', r'discrete'), fancybox=True, shadow=True, ncol=3, fontsize=11)
 
         ax.set_ylabel(r'Normalized class count', fontsize=13)
         ax.set_xticklabels(year, fontsize=13)
@@ -301,7 +301,7 @@ def bar_chart(container, labels, year, wl, a_less=True, month=False):
         autolabel(rects3)
         autolabel(rects4)
 
-        plt.ylim(0, 55)
+        plt.ylim(0, 60)
         plt.tight_layout()
 
 
@@ -391,22 +391,25 @@ year = [r'2014', r'2016', r'2018', r'2020']
 wl = [r'5577 Å', r'5577 Å', r'5577 Å', r'5577 Å']
 
 # Pie chart for each year
-#dist_pie_chart(container_Full, LABELS, year, wl, month=False)
-#dist_pie_chart(container_Full, LABELS, year, wl, a_less=True, month=False)
-#plt.show()
+'''
+dist_pie_chart(container_Full, LABELS, year, wl, month=False)
+dist_pie_chart(container_Full, LABELS, year, wl, a_less=False, month=False)
+plt.show()
+'''
 
 # Pie chart for months
-#dist_pie_chart(container_Full, LABELS, year, wl, month=True)
-#dist_pie_chart(container_Full, LABELS, year, wl, month=True, a_less=False)
-#plt.show()
-
+'''
+dist_pie_chart(container_Full, LABELS, year, wl, month=True)
+dist_pie_chart(container_Full, LABELS, year, wl, month=True, a_less=False)
+plt.show()
+'''
 
 # Bar charts
+'''
 bar_chart(container_Full, LABELS, year, wl, a_less=True, month=False)
 bar_chart(container_Full, LABELS, year, wl, a_less=False, month=False)
-
 plt.show()
-exit()
+'''
 
 
 # See which class combinations the model had a hard time predicting
@@ -414,57 +417,48 @@ def pred_5050(container, title=''):
 
     #weight = []
     dict = {}
+    dict_3 = {}
     count_5050 = 0
     count_less_than_60 = 0
     count_over_85 = 0
     index = 0
 
+    count_three = 0
+
     for entry in container:
 
-        #print(entry.score[entry.label])
-        #print(entry.score)
         index += 1
 
         if entry.score[entry.label] < 0.6:  # Less than 60 %
 
-            #print("Max: %s " %entry.label, entry.score[entry.label])
-            #print('Check second highest label')
-            #weight.append(1)
-
             x = sorted(entry.score.items(),key=(lambda i: i[1]))
-
             max = (x[-1][0], x[-1][1])
             max2nd = (x[-2][0], x[-2][1])
+            max3rd = (x[-3][0], x[-3][1])
+
+            if max3rd[1] > 0.28:
+
+                count_three += 1
+
+                dict_3[index] = list()
+                dict_3[index].extend([x[-1][0], x[-2][0], x[-3][0]])
 
             if abs(max[1] - max2nd[1]) <= 0.1:
 
                 count_5050 += 1
-                '''
-                print("max:    ", max)
-                print("max2nd: ", max2nd)
-                print()
-                '''
-
                 dict[index] = list()
                 dict[index].extend([x[-1][0], x[-2][0]])
 
             else:
                 dict[index] = None
                 count_less_than_60 += 1
-                #print("Not very similar max and max2nd, diff: ", abs(max[1] - max2nd[1]))
-                #print("%.3f vs %.3f" %(max[1], max2nd[1]))
 
         else:
-            #weight.append(2)
             dict[index] = None
-            #print("Max: %.5f [%s]" %(entry.score[entry.label], entry.label))
             if entry.score[entry.label] > 0.85:
                 count_over_85 += 1
 
-
-    #print(weight)
     print(title)
-    #print(len(dict))
     print("Over 85% pred acc.: {} [{:.2f}%]".format(count_over_85, (count_over_85/len(dict))*100))
     print("50/50 labels: {} [{:.2f}%]".format(count_5050, (count_5050/len(dict))*100))
     print("(Less than 60% accuracy, but not 50/50: {})".format(count_less_than_60))
@@ -480,7 +474,6 @@ def pred_5050(container, title=''):
     for key, value in dict.items():
         if value != None:
             c += 1
-            #print(value)
 
             if LABELS[0] in value and LABELS[1] in value:
                 test1 += 1
@@ -504,6 +497,31 @@ def pred_5050(container, title=''):
     #print(c)
     #print(test1+test2+test3+test4+test5+test6)
 
+    c = 0
+    test1 = 0
+    test2 = 0
+    test3 = 0
+    test4 = 0
+    for key, value in dict_3.items():
+        if value != None:
+            c += 1
+
+            if LABELS[0] in value and LABELS[1] in value and LABELS[2] in value:
+                test1 += 1
+            if LABELS[0] in value and LABELS[1] in value and LABELS[3] in value:
+                test2 += 1
+            if LABELS[0] in value and LABELS[2] in value and LABELS[3] in value:
+                test3 += 1
+            if LABELS[1] in value and LABELS[2] in value and LABELS[3] in value:
+                test4 += 1
+
+    print("30/30/30 labels: {} [{:.2f}%]".format(count_three, (count_three/len(dict))*100))
+    print("count: %g, combi: %s (%3.1f%%)" %(test1, (LABELS[0], LABELS[1], LABELS[2]), (test1/c)*100))
+    print("count: %g, combi: %s (%3.1f%%)" %(test2, (LABELS[0], LABELS[1], LABELS[3]), (test2/c)*100))
+    print("count: %g, combi: %s (%3.1f%%)" %(test3, (LABELS[0], LABELS[2], LABELS[3]), (test3/c)*100))
+    print("count: %g, combi: %s (%3.1f%%)" %(test4, (LABELS[1], LABELS[2], LABELS[3]), (test4/c)*100))
+    print(((test1/c)*100)+((test2/c)*100)+((test3/c)*100)+((test4/c)*100))
+
 
 def weights_and_stuff():
     print('weights and stuff')
@@ -522,6 +540,7 @@ def weights_and_stuff():
     """
 
 #weights_and_stuff()
+
 
 def max_min_mean(list, label):
 
@@ -765,16 +784,17 @@ def Bz_stats(year):
 
     sub_plots_Bz(year, a_less, arc, diff, disc, neg, pos)
 
-    plt.savefig("stats/Green/b2/yearly_Bz_plot_{}_small.png".format(year), bbox_inches="tight")
+    plt.savefig("stats/Green/b3/yearly_Bz_plot_{}_small.png".format(year), bbox_inches="tight")
     #plt.show()
 
 
+'''
 Bz_stats(year='2014')
 Bz_stats(year='2016')
 Bz_stats(year='2018')
 Bz_stats(year='2020')
 Bz_stats(year='All years')
-exit()
+'''
 
 
 def Get_hours():
@@ -1012,10 +1032,10 @@ def plot(hours, list, label, year, month=None, monthly=False, axis=False):
     '''
     if monthly:
         plt.title("Stats {}".format(month))
-        #plt.savefig("stats/Green/b2/hour_lineplot_{}_{}.png".format(year, month))
+        #plt.savefig("stats/Green/b3/hour_lineplot_{}_{}.png".format(year, month))
     else:
         plt.title("Stats")
-        #plt.savefig("stats/Green/b2/hour_lineplot_{}.png".format(year))
+        #plt.savefig("stats/Green/b3/hour_lineplot_{}.png".format(year))
     '''
 
 def plot_hourly_nor(hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, year, month=None, monthly=False):
@@ -1030,13 +1050,13 @@ def plot_hourly_nor(hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, year, month=None,
     #plt.xticks(rotation='vertical')
     plt.xlabel("Hour of the day"); plt.ylabel("Percentage")
     plt.legend()
-    #plt.savefig("stats/Green/b2//hour_lineplot_per_%s.png" %year)
+    #plt.savefig("stats/Green/b3//hour_lineplot_per_%s.png" %year)
     if monthly:
         plt.title("Stats {} {}".format(month, year))
-        plt.savefig("stats/Green/b2/hour_lineplot_{}_{}.png".format(year, month))
+        plt.savefig("stats/Green/b3/hour_lineplot_{}_{}.png".format(year, month))
     else:
         plt.title("Stats {}".format(year))
-        plt.savefig("stats/Green/b2/hour_lineplot_{}.png".format(year))
+        plt.savefig("stats/Green/b3/hour_lineplot_{}.png".format(year))
 
 
 def sub_plots(year, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=None, month_name=None,  N=4):
@@ -1173,7 +1193,7 @@ def Hour_subplot(container, year, month_name='Jan', N=4, month=False, weight=Fal
                 plt.title("Stats %s, %s" %(M_label[i], year))
                 #plt.xticks(rotation='vertical')
                 plt.xlabel("Hour of the day"); plt.ylabel("Count")
-                #plt.savefig("stats/Green/b2/hour_plot_%s_%s.png" %(year, M_label[i]))
+                #plt.savefig("stats/Green/b3/hour_plot_%s_%s.png" %(year, M_label[i]))
 
 
     else:
@@ -1226,7 +1246,7 @@ def Hour_subplot(container, year, month_name='Jan', N=4, month=False, weight=Fal
             plt.title("Stats %s" %year)
             #plt.xticks(rotation='vertical')
             plt.xlabel("Hour of the day"); plt.ylabel("Percentage")
-            #plt.savefig("stats/Green/b2//hour_plot_per_%s.png" %year)
+            #plt.savefig("stats/Green/b3//hour_plot_per_%s.png" %year)
         else:
             plt.figure()
             subcategorybar(hours, [T_arc, T_diff, T_disc], ["arc. tot: %d" %sum(T_arc), "diff. tot: %d"%sum(T_diff), "disc. tot: %d"%sum(T_disc)])
@@ -1234,7 +1254,7 @@ def Hour_subplot(container, year, month_name='Jan', N=4, month=False, weight=Fal
             plt.title("Stats %s" %year)
             #plt.xticks(rotation='vertical')
             plt.xlabel("Hour of the day"); plt.ylabel("Count")
-            #plt.savefig("stats/Green/b2//hour_plot_per_%s.png" %year)
+            #plt.savefig("stats/Green/b3//hour_plot_per_%s.png" %year)
         '''
 
         #plot(hours, T_Aurora_N, 'Aurora', year, month=None, monthly=False)
@@ -1267,25 +1287,25 @@ def Hour_subplot(container, year, month_name='Jan', N=4, month=False, weight=Fal
 
         """
 
-#plt.figure(figsize=(8, 11)) # bredde, hoyde
-#Hour_subplot(container=container_Full, year="2014", N=5, month=False)
-#Hour_subplot(container=container_Full, year="2016", N=5, month=False)
-#Hour_subplot(container=container_Full, year="2018", N=5, month=False)
-#Hour_subplot(container=container_Full, year="2020", N=5, month=False)
+plt.figure(figsize=(8, 11)) # bredde, hoyde
+Hour_subplot(container=container_Full, year="2014", N=5, month=False)
+Hour_subplot(container=container_Full, year="2016", N=5, month=False)
+Hour_subplot(container=container_Full, year="2018", N=5, month=False)
+Hour_subplot(container=container_Full, year="2020", N=5, month=False)
 
-#plt.savefig("stats/Green/b2/yearly_hour_plot.png", bbox_inches="tight")
+plt.savefig("stats/Green/b3/yearly_hour_plot.png", bbox_inches="tight")
 #plt.show()
 
+'''
 plt.figure(figsize=(8, 11)) # bredde, hoyde
 Hour_subplot(container=container_Full, year="2014 w", N=5, month=False)
 Hour_subplot(container=container_Full, year="2016 w", N=5, month=False)
 Hour_subplot(container=container_Full, year="2018 w", N=5, month=False)
 Hour_subplot(container=container_Full, year="2020 w", N=5, month=False)
 
-#plt.savefig("stats/Green/b2/yearly_hour_plot_weight.png", bbox_inches="tight")
-plt.show()
-
-exit()
+#plt.savefig("stats/Green/b3/yearly_hour_plot_weight.png", bbox_inches="tight")
+#plt.show()
+'''
 
 MN = ['Jan', 'Nov', 'Dec']
 
@@ -1296,5 +1316,5 @@ for i in range(len(MN)):
     Hour_subplot(container=container_Full, year="2016", month_name=MN[i], N=5,month=True)
     Hour_subplot(container=container_Full, year="2018", month_name=MN[i], N=5,month=True)
     Hour_subplot(container=container_Full, year="2020", month_name=MN[i], N=5,month=True)
-    #plt.savefig("stats/Green/b2/monthly_hour_plot_leg_{}.png".format(MN[i]), bbox_inches="tight")
+    plt.savefig("stats/Green/b3/monthly_hour_plot_leg_{}.png".format(MN[i]), bbox_inches="tight")
     #plt.show()

@@ -19,11 +19,10 @@ def remove(container):
     print('removed images from container: ', counter)
     print('new container len: ', len(container))
 
-    container.to_json(r'C:\Users\Krist\Documents\ASI_json_files\Aurora_G_omni_mean_predicted_efficientnet-b2_cut.json')
-
+    #container.to_json(r'C:\Users\Krist\Documents\ASI_json_files\Aurora_G_omni_mean_predicted_efficientnet-b3_cut.json')
 
 # All 4 years, jan+nov+dec
-predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b2.json'
+predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3.json'
 
 def split(container, nightside=False):
 
@@ -40,13 +39,12 @@ def split(container, nightside=False):
 
             if int(container[i].timepoint[-8:-6]) >= day_start and int(container[i].timepoint[-8:-6]) <= day_end:
 
-                #print(container[i].timepoint[-8:-6])
                 del container[i]
                 counter += 1
         print('removed images from container: ', counter)
         print('new container len: ', len(container))
 
-        container.to_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b2_nighttime.json')
+        container.to_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_nighttime.json')
         return container
 
     else:
@@ -69,7 +67,7 @@ def split(container, nightside=False):
         #print('removed images from container: ', counter)
         print('new container len: ', len(container))
 
-        container.to_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b2_daytime.json')
+        container.to_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_daytime.json')
         return container
 
 def split_container(container, nightside=False):
@@ -85,6 +83,7 @@ def split_container(container, nightside=False):
     return container
 
 container_Full = DatasetContainer.from_json(predicted_G_Full)
+print(len(container_Full))
 container_D = split_container(container_Full)
 
 container_Full = DatasetContainer.from_json(predicted_G_Full)

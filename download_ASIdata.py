@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 from dateutil import rrule
 from datetime import datetime
 
+# Make ONE red data set
 
 def Times():
     # Make times
@@ -183,13 +184,13 @@ def DL_red(times, dates, station, folder_name):
 #DL_green(times, dates14, station_nya4, folder_name_G)
 #DL_green(times, dates14_dec, station_nya4, folder_name_G)
 
-DL_green(times, dates16, station_nya6, folder_name_G)
-DL_green(times, dates16_dec, station_nya6, folder_name_G)
-DL_green(times, dates18, station_nya6, folder_name_G)
-DL_green(times, dates18_dec, station_nya6, folder_name_G)
+#DL_green(times, dates16, station_nya6, folder_name_G)
+#DL_green(times, dates16_dec, station_nya6, folder_name_G)
+#DL_green(times, dates18, station_nya6, folder_name_G)
+#DL_green(times, dates18_dec, station_nya6, folder_name_G)
 #DL_green(times, dates20, station_nya6, folder_name_G)
 #DL_green(times, dates20_dec, station_nya6, folder_name_G)
-'''
+
 DL_red(times, dates14, station_nya6, folder_name_R)
 DL_red(times, dates14_dec, station_nya6, folder_name_R)
 # nya station as well for 2014
@@ -203,7 +204,6 @@ DL_red(times, dates18_dec, station_nya6, folder_name_R)
 DL_red(times, dates20, station_nya6, folder_name_R)
 DL_red(times, dates20_dec, station_nya6, folder_name_R)
 
-'''
 
 stop = time.time() - start
 print("Download time for all images [h]: ", stop/(60*60))
@@ -245,5 +245,5 @@ def transform(folder_name, out_path, test=False):
             exit()
 
 # Transform full image folder
-#transform(folder_name_R, out_path_R)
-transform(folder_name_G, out_path_G, test=True)
+transform(folder_name_R, out_path_R)
+#transform(folder_name_G, out_path_G, test=True)

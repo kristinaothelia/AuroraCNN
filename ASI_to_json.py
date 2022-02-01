@@ -50,11 +50,11 @@ if os.path.isfile(omni14):
     omni_data16_csv = read_csv(file=omni16)
     omni_data18_csv = read_csv(file=omni18)
     omni_data20_csv = read_csv(file=omni20)
-else:
-    omni_data14_csv = read_csv(file = path+'MasterThesis/datasets/omni/omni_min_2014_withDate.csv')
-    omni_data16_csv = read_csv(file = path+'MasterThesis/datasets/omni/omni_min_2016_withDate.csv')
-    omni_data18_csv = read_csv(file = path+'MasterThesis/datasets/omni/omni_min_2018_withDate.csv')
-    omni_data20_csv = read_csv(file = path+'MasterThesis/datasets/omni/omni_min_2020_withDate.csv')
+else: # Edit to AuroraCNN
+    omni_data14_csv = read_csv(file = path+'AuroraCNN/datasets/omni/omni_min_2014_withDate.csv')
+    omni_data16_csv = read_csv(file = path+'AuroraCNN/datasets/omni/omni_min_2016_withDate.csv')
+    omni_data18_csv = read_csv(file = path+'AuroraCNN/datasets/omni/omni_min_2018_withDate.csv')
+    omni_data20_csv = read_csv(file = path+'AuroraCNN/datasets/omni/omni_min_2020_withDate.csv')
 
 # Dataset containing data
 def files(original=True, green=True, train=False, mean=False):
@@ -62,7 +62,7 @@ def files(original=True, green=True, train=False, mean=False):
     if train:
         folder = '/itf-fi-ml/home/koolsen/Aurora/Data/Aurora_train'
         json_file = '/itf-fi-ml/home/koolsen/Master/Full_aurora_NEW.json' # To large fil for GitHub
-        csv_file = '/itf-fi-ml/home/koolsen/Master/MasterThesis/datasets/Full_aurora_NEW.csv'
+        csv_file = '/itf-fi-ml/home/koolsen/Master/AuroraCNN/datasets/Full_aurora_NEW.csv'
         wl = '5577 and 6300'
 
     if green:
@@ -70,49 +70,62 @@ def files(original=True, green=True, train=False, mean=False):
         if original:
             folder = path+'T_DATA_green'
             json_file = path+'Aurora_G.json' # To large fil for GitHub
-            csv_file = path+'MasterThesis/datasets/Aurora_G.csv'
+            csv_file = path+'AuroraCNN/datasets/Aurora_G.csv'
             if mean:
                 json_file_mean = path+'Aurora_G_omni_mean.json' # To large fil for GitHub
-                csv_file_mean = path+'MasterThesis/datasets/Aurora_G_omni_mean.csv'
+                csv_file_mean = path+'AuroraCNN/datasets/Aurora_G_omni_mean.csv'
             else:
                 json_file_omni = path+'Aurora_G_omni.json' # To large fil for GitHub
-                csv_file_omni = path+'MasterThesis/datasets/Aurora_G_omni.csv'
+                csv_file_omni = path+'AuroraCNN/datasets/Aurora_G_omni.csv'
 
         else:
             folder = path+'T_DATA_4yr_G'
             json_file = path+'Aurora_4yr_G.json' # To large fil for GitHub
-            csv_file = path+'MasterThesis/datasets/Aurora_4yr_G.csv'
+            csv_file = path+'AuroraCNN/datasets/Aurora_4yr_G.csv'
             if mean:
                 json_file_mean = path+'Aurora_4yr_G_omni_mean.json' # To large fil for GitHub
-                csv_file_mean = path+'MasterThesis/datasets/Aurora_4yr_G_omni_mean.csv'
+                csv_file_mean = path+'AuroraCNN/datasets/Aurora_4yr_G_omni_mean.csv'
             else:
                 json_file_omni = path+'Aurora_4yr_G_omni.json' # To large fil for GitHub
-                csv_file_omni = path+'MasterThesis/datasets/Aurora_4yr_G_omni.csv'
+                csv_file_omni = path+'AuroraCNN/datasets/Aurora_4yr_G_omni.csv'
 
     else:
         wl = '6300'
+        folder = path+'T_DATA_4yr_R'
+        json_file = path+'Aurora_4yr_R.json' # To large fil for GitHub
+        csv_file = path+'Aurora_4yr_R.csv'
+        #csv_file = path+'AuroraCNN/datasets/Aurora_4yr_R.csv'
+        if mean:
+            json_file_mean = path+'Aurora_4yr_R_omni_mean.json' # To large fil for GitHub
+            #csv_file_mean = path+'AuroraCNN/datasets/Aurora_4yr_R_omni_mean.csv'
+            csv_file_mean = path+'Aurora_4yr_R_omni_mean.csv'
+        else:
+            json_file_omni = path+'Aurora_4yr_R_omni.json' # To large fil for GitHub
+            #csv_file_omni = path+'AuroraCNN/datasets/Aurora_4yr_R_omni.csv'
+            csv_file_omni = path+'Aurora_4yr_R_omni.csv'
+        '''
         if original:
             folder = path+'T_DATA'
             json_file = path+'Aurora_R.json' # To large fil for GitHub
-            csv_file = path+'MasterThesis/datasets/Aurora_R.csv'
+            csv_file = path+'AuroraCNN/datasets/Aurora_R.csv'
             if mean:
                 json_file_mean = path+'Aurora_R_omni_mean.json' # To large fil for GitHub
-                csv_file_mean = path+'MasterThesis/datasets/Aurora_R_omni_mean.csv'
+                csv_file_mean = path+'AuroraCNN/datasets/Aurora_R_omni_mean.csv'
             else:
                 json_file_omni = path+'Aurora_R_omni.json' # To large fil for GitHub
-                csv_file_omni = path+'MasterThesis/datasets/Aurora_R_omni.csv'
+                csv_file_omni = path+'AuroraCNN/datasets/Aurora_R_omni.csv'
 
         else:
             folder = path+'T_DATA_4yr_R'
             json_file = path+'Aurora_4yr_R.json' # To large fil for GitHub
-            csv_file = path+'MasterThesis/datasets/Aurora_4yr_R.csv'
+            csv_file = path+'AuroraCNN/datasets/Aurora_4yr_R.csv'
             if mean:
                 json_file_mean = path+'Aurora_4yr_R_omni_mean.json' # To large fil for GitHub
-                csv_file_mean = path+'MasterThesis/datasets/Aurora_4yr_R_omni_mean.csv'
+                csv_file_mean = path+'AuroraCNN/datasets/Aurora_4yr_R_omni_mean.csv'
             else:
                 json_file_omni = path+'Aurora_4yr_R_omni.json' # To large fil for GitHub
-                csv_file_omni = path+'MasterThesis/datasets/Aurora_4yr_R_omni.csv'
-
+                csv_file_omni = path+'AuroraCNN/datasets/Aurora_4yr_R_omni.csv'
+        '''
 
     return folder, json_file, csv_file, wl
 
@@ -139,9 +152,7 @@ def average_omni_values(index, omni_data, omni_data_dates, tp, N_min):
     """
     Use solar wind data from 1 hour before timepoint.
     On night side
-    Make 30 min (?) average Bz value (and the others)
-
-    Some std thing?
+    Make 30 min average Bz value (and the others)
     """
 
     ii = test_new(omni_data_dates, tp)
@@ -380,12 +391,20 @@ file_from_ASIfolder(folder, wl, json_file)
 add_file_information(json_file, csv_file, omni_data20_csv, SW, omni=False)
 '''
 
-'''
+
 # red aurora
+start = time.time()
 folder, json_file, csv_file, wl = files(green=False)
-#file_from_ASIfolder(folder, wl, json_file)
+json_file_mean = path+'Aurora_R_omni_mean.json' # To large fil for GitHub
+csv_file_mean = path+'Aurora_R_omni_mean.csv'
+file_from_ASIfolder(folder, wl, json_file)
+print('Add file information')
 add_file_information(json_file, csv_file, omni_data20_csv, SW)
-'''
+print('Add omni information')
+add_omni_information(json_file, json_file_mean, csv_file_mean)
+stop = time.time() - start
+print("Time [h]: ", stop/(60*60))
+
 
 '''
 start = time.time()
@@ -393,7 +412,7 @@ start = time.time()
 # green aurora, 2016 and 2018
 folder, json_file, csv_file, wl = files(original=False)
 json_file_mean = path+'Aurora_4yr_G_omni_mean.json' # To large fil for GitHub
-csv_file_mean = path+'MasterThesis/datasets/Aurora_4yr_G_omni_mean.csv'
+csv_file_mean = path+'AuroraCNN/datasets/Aurora_4yr_G_omni_mean.csv'
 #file_from_ASIfolder(folder, wl, json_file)
 #add_file_information(json_file, csv_file)
 add_omni_information(json_file, json_file_mean, csv_file_mean)
@@ -401,15 +420,19 @@ add_omni_information(json_file, json_file_mean, csv_file_mean)
 stop = time.time() - start
 print("Time [h] (set 1618): ", stop/(60*60))
 '''
-start = time.time()
 
+
+'''
+start = time.time()
 # green aurora, 2014 and 2020
 folder, json_file, csv_file, wl = files()
 json_file_mean = path+'Aurora_G_omni_mean.json' # To large fil for GitHub
-csv_file_mean = path+'MasterThesis/datasets/Aurora_G_omni_mean.csv'
+#csv_file_mean = path+'AuroraCNN/datasets/Aurora_G_omni_mean.csv'
+csv_file_mean = path+'Aurora_G_omni_mean.csv'
 #file_from_ASIfolder(folder, wl, json_file)
 #add_file_information(json_file, csv_file)
 add_omni_information(json_file, json_file_mean, csv_file_mean)
 
 stop = time.time() - start
 print("Time [h] (set 1420): ", stop/(60*60))
+'''
