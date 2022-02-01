@@ -8,10 +8,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import ConnectionPatch
 from pylab import *
+import math
+import operator
 # -----------------------------------------------------------------------------
-
-# Red:      6300        Count:  142 470
-# Green:    5577        Count:  284 840
 
 LABELS = ['aurora-less', 'arc', 'diffuse', 'discrete']
 
@@ -20,17 +19,8 @@ predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_m
 container_Full = DatasetContainer.from_json(predicted_G_Full)
 print("len container Full: ", len(container_Full))
 
-split_day = True
-if split_day:
-    container_D = DatasetContainer.from_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_daytime.json')
-    container_N = DatasetContainer.from_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_nighttime.json')
-
-    print('len container day:   ', len(container_D))
-    print('len container night: ', len(container_N))
-
 
 def aurora_Bz_stats(container, label, year_='2014', year=False):
-
 
     input = 'Bz, nT (GSM)'
     Hours_POS = []
@@ -85,34 +75,49 @@ def omni_ting(container, year_='2014', year=False):
     input_err = 'Bz, nT (GSM), SD'
     a_less_NEG_err = []; a_less_POS_err = []
 
+    test_p = {}
+    test_n = {}
+
+    index = 0
+
     if year:
         for entry in container:
-            if entry.timepoint[:4] == year_:
-                if entry.label == LABELS[0]:
-                    if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
-                        a_less_POS.append(float(entry.solarwind[input]))
-                        a_less_POS_err.append(float(entry.solarwind[input_err]))
-                    else:
-                        a_less_NEG.append(float(entry.solarwind[input]))
-                        a_less_NEG_err.append(float(entry.solarwind[input_err]))
+            index += 1
+            if float(entry.solarwind[input]) != 9999.99:
+                if entry.timepoint[:4] == year_:
+                    if entry.label == LABELS[0]:
+                        if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
+                            a_less_POS.append(float(entry.solarwind[input]))
+                            a_less_POS_err.append(float(entry.solarwind[input_err]))
+                            test_p[index] = list()
+                            test_p[index].extend([float(entry.solarwind[input]), float(entry.solarwind[input_err])])
+                            #print(test_p)
+                            #exit()
+                        else:
+                            a_less_NEG.append(float(entry.solarwind[input]))
+                            a_less_NEG_err.append(float(entry.solarwind[input_err]))
+                            test_n[index] = list()
+                            test_n[index].extend([float(entry.solarwind[input]), float(entry.solarwind[input_err])])
+                            #print(test_p)
+                            #exit()
 
-                elif entry.label == LABELS[1]:
-                    if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
-                        arc_POS.append(float(entry.solarwind[input]))
-                    else:
-                        arc_NEG.append(float(entry.solarwind[input]))
+                    elif entry.label == LABELS[1]:
+                        if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
+                            arc_POS.append(float(entry.solarwind[input]))
+                        else:
+                            arc_NEG.append(float(entry.solarwind[input]))
 
-                elif entry.label == LABELS[2]:
-                    if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
-                        diff_POS.append(float(entry.solarwind[input]))
-                    else:
-                        diff_NEG.append(float(entry.solarwind[input]))
+                    elif entry.label == LABELS[2]:
+                        if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
+                            diff_POS.append(float(entry.solarwind[input]))
+                        else:
+                            diff_NEG.append(float(entry.solarwind[input]))
 
-                elif entry.label == LABELS[3]:
-                    if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
-                        disc_POS.append(float(entry.solarwind[input]))
-                    else:
-                        disc_NEG.append(float(entry.solarwind[input]))
+                    elif entry.label == LABELS[3]:
+                        if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
+                            disc_POS.append(float(entry.solarwind[input]))
+                        else:
+                            disc_NEG.append(float(entry.solarwind[input]))
 
     else:
         for entry in container:
@@ -142,7 +147,7 @@ def omni_ting(container, year_='2014', year=False):
                 else:
                     disc_NEG.append(float(entry.solarwind[input]))
 
-    return a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG, a_less_POS_err, a_less_NEG_err
+    return a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG, a_less_POS_err, a_less_NEG_err, test_p, test_n
 
 def sub_plots(year, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=None, month_name=None,  N=4, shape='*-'):
 
@@ -450,10 +455,15 @@ def sub_plots_Bz(year, a_less, arc, diff, disc, neg=None, pos=None, T_Aurora_N=N
         else:
             plt.title('Yearly statistics for all classes. {}'.format(year[:4]), fontsize=18)
 
+
     a_heights, a_bins = np.histogram(arc[0], bins=bins, density=True)
     b_heights, b_bins = np.histogram(arc[1], bins=bins, density=True)
     plt.plot(a_bins[:-1], a_heights, '.-', label='arc - day')
     plt.plot(b_bins[:-1], b_heights, '*-', label='arc - night')
+
+    #plt.errorbar(a_bins[:-1], a_heights, yerr=arc[2])
+
+
     #adding text inside the plot
     #plt.text(-24, 0.20, 'Bz < 0: {:.2f}%'.format(neg[0][1]), fontsize = 13, color='C0')
     #plt.text(-24, 0.17, 'Bz > 0: {:.2f}%'.format(pos[0][1]), fontsize = 13, color='C0')
@@ -521,14 +531,116 @@ def Bz_stats(year):
     print('Bz stats')
     plt.figure(figsize=(8, 11)) # bredde, hoyde
 
+    split_day = False
+    if split_day:
+        container_D = DatasetContainer.from_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_daytime.json')
+        container_N = DatasetContainer.from_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_nighttime.json')
+
+        print('len container day:   ', len(container_D))
+        print('len container night: ', len(container_N))
+
     if year == 'All years':
-        a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG, a_less_POS_err, a_less_NEG_err = omni_ting(container_Full)
-        a_less_POS_D, a_less_NEG_D, arc_POS_D, arc_NEG_D, diff_POS_D, diff_NEG_D, disc_POS_D, disc_NEG_D, a_less_POS_err, a_less_NEG_err = omni_ting(container_D)
-        a_less_POS_N, a_less_NEG_N, arc_POS_N, arc_NEG_N, diff_POS_N, diff_NEG_N, disc_POS_N, disc_NEG_N, a_less_POS_err, a_less_NEG_err = omni_ting(container_N)
+        a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG, a_less_POS_err, a_less_NEG_err, test_p, test_n = omni_ting(container_Full)
+        #a_less_POS_D, a_less_NEG_D, arc_POS_D, arc_NEG_D, diff_POS_D, diff_NEG_D, disc_POS_D, disc_NEG_D, a_less_POS_err, a_less_NEG_err = omni_ting(container_D)
+        #a_less_POS_N, a_less_NEG_N, arc_POS_N, arc_NEG_N, diff_POS_N, diff_NEG_N, disc_POS_N, disc_NEG_N, a_less_POS_err, a_less_NEG_err = omni_ting(container_N)
     else:
-        a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG, a_less_POS_err, a_less_NEG_err = omni_ting(container_Full, year, True)
-        a_less_POS_D, a_less_NEG_D, arc_POS_D, arc_NEG_D, diff_POS_D, diff_NEG_D, disc_POS_D, disc_NEG_D, a_less_POS_err, a_less_NEG_err = omni_ting(container_D, year, True)
-        a_less_POS_N, a_less_NEG_N, arc_POS_N, arc_NEG_N, diff_POS_N, diff_NEG_N, disc_POS_N, disc_NEG_N, a_less_POS_err, a_less_NEG_err = omni_ting(container_N, year, True)
+        a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG, a_less_POS_err, a_less_NEG_err, test_p, test_n = omni_ting(container_Full, year, True)
+        #a_less_POS_D, a_less_NEG_D, arc_POS_D, arc_NEG_D, diff_POS_D, diff_NEG_D, disc_POS_D, disc_NEG_D, a_less_POS_err, a_less_NEG_err = omni_ting(container_D, year, True)
+        #a_less_POS_N, a_less_NEG_N, arc_POS_N, arc_NEG_N, diff_POS_N, diff_NEG_N, disc_POS_N, disc_NEG_N, a_less_POS_err, a_less_NEG_err = omni_ting(container_N, year, True)
+
+    a_less = [a_less_POS, a_less_NEG, a_less_POS_err, a_less_NEG_err]
+    arc = [arc_POS, arc_NEG]
+    diff = [diff_POS, diff_NEG]
+    disc = [disc_POS, disc_NEG]
+
+    #dict_items = test_p.items()
+    #first = list(dict_items)[:10]
+
+    #d = {1: 2, 3: 4, 4: 3, 2: 1, 0: 0}
+    #print('Original dictionary : ',test_p)
+    sorted_p = dict(sorted(test_p.items(), key=operator.itemgetter(1)))
+    #print('Dictionary in ascending order by value : ',sorted_p)
+    #sorted_d = dict( sorted(d.items(), key=operator.itemgetter(1),reverse=True))
+    #print('Dictionary in descending order by value : ',sorted_d)
+
+    sorted_n = dict(sorted(test_n.items(), key=operator.itemgetter(1)))
+
+    values_val_p = []
+    values_err_p = []
+    values_val_n = []
+    values_err_n = []
+
+    for key, value in sorted_p.items():
+        values_val_p.append(math.trunc(value[0]))
+        values_err_p.append(value[1])
+    for key, value in sorted_n.items():
+        values_val_n.append(math.trunc(value[0]))
+        values_err_n.append(value[1])
+
+    #bins = np.linspace(0, 25, 26)   # -25, 51
+    bins = np.linspace(-25, 25, 51)
+    print(bins)
+    bins_p = np.linspace(0, 25, 26)
+    bins_n = np.linspace(-25, 0, 26)
+
+    error_list_p = []
+    count_list_p = []
+    for j in range(len(bins_p)):
+        error = []
+        count = 0
+        for i in range(len(values_val_p)):
+
+            if math.trunc(values_val_p[i]) == bins_p[j]:
+                count += 1
+                error.append(values_err_p[i])
+        error_list_p.append(np.std(error))
+        count_list_p.append(count)
+
+    #print(error_list_p)
+    #print(count_list_p)
+
+    error_list_n = []
+    count_list_n = []
+    for j in range(len(bins_n)):
+        error = []
+        count = 0
+        for i in range(len(values_val_n)):
+
+            if math.trunc(values_val_n[i]) == bins_n[j]:
+                count += 1
+                error.append(values_err_n[i])
+        error_list_n.append(np.std(error))
+        count_list_n.append(count)
+
+    #print(error_list_n)
+    #print(count_list_n)
+
+        #print(math.trunc(values_val[i]), values_err[i])
+
+    #for i in range(len(bins)):
+    #    print(values_val.count(bins[i]))
+    figure()
+    # FEEEEEEEEEEEEIL
+    counts, bin_edges = np.histogram(a_less[0]+a_less[1], bins=np.linspace(-25, 25, 51), density=True)
+    bin_centers = (bin_edges[:-1] + bin_edges[1:])/2.
+    err = error_list_p[:-1] + error_list_n[:-1]
+    plt.errorbar(bin_centers, counts, xerr=err, fmt='-o', ecolor='k')
+
+    figure()
+    counts_p,bin_edges_p = np.histogram(a_less[0], bins_p, density=True)
+    counts_n,bin_edges_n = np.histogram(a_less[1], bins_n, density=True)
+    bin_centers_p = (bin_edges_p[:-1] + bin_edges_p[1:])/2.
+    bin_centers_n = (bin_edges_n[:-1] + bin_edges_n[1:])/2.
+    err_p = error_list_p #np.random.rand(bin_centres.size)*100
+    err_n = error_list_n
+    plt.errorbar(bin_centers_p, counts_p, xerr=err_p[:-1], fmt='-o', ecolor='k', capsize=0.8)    #, fmt='o'
+    plt.errorbar(bin_centers_n, counts_n, xerr=err_n[:-1], fmt='-o', ecolor='k')
+
+    plt.show()
+    exit()
+
+
+    exit()
 
     '''
     a_less = [a_less_Day, a_less_Night]
@@ -540,19 +652,47 @@ def Bz_stats(year):
     '''
 
     #a_less = []
+    '''
+    x = np.random.rand(1000)
+    y, bin_edges = np.histogram(x, bins=10)
+    bin_centers = 0.5*(bin_edges[1:] + bin_edges[:-1])
 
-    #sub_plots_Bz(year, a_less, arc, diff, disc, neg, pos)
+    plt.errorbar(
+        bin_centers,
+        y,
+        yerr = y**0.5,
+        marker = '.',
+        #drawstyle = 'steps-mid'
+    )
+    plt.show()
+
+
+    a_heights, a_bins = np.histogram(a_less[0], bins=bins, density=True)
+    bin_centers = 0.5*(a_bins[1:] + a_bins[:-1])
+    #plt.plot()
+    plt.errorbar(
+        bin_centers,
+        a_heights,
+        yerr = y**0.5,
+        marker = '.',
+    )
+    plt.show()
+    exit()
+    '''
+
+    sub_plots_Bz(year, a_less, arc, diff, disc)
 
     #plt.savefig("stats/Green/b3/yearly_Bz_plot_{}.png".format(year), bbox_inches="tight")
-    #plt.show()
+    plt.show()
 
-'''
+# Make
 Bz_stats(year='2014')
-Bz_stats(year='2016')
-Bz_stats(year='2018')
-Bz_stats(year='2020')
-Bz_stats(year='All years')
-'''
+#Bz_stats(year='2016')
+#Bz_stats(year='2018')
+#Bz_stats(year='2020')
+#Bz_stats(year='All years')
+
+exit()
 
 def Bz_split(container, year_="All years", month=False, year=False):
 

@@ -399,7 +399,7 @@ json_file_mean = path+'Aurora_R_omni_mean.json' # To large fil for GitHub
 csv_file_mean = path+'Aurora_R_omni_mean.csv'
 file_from_ASIfolder(folder, wl, json_file)
 print('Add file information')
-add_file_information(json_file, csv_file, omni_data20_csv, SW)
+add_file_information(json_file, csv_file)
 print('Add omni information')
 add_omni_information(json_file, json_file_mean, csv_file_mean)
 stop = time.time() - start
