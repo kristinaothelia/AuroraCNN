@@ -378,7 +378,7 @@ def add_omni_information(json_file, json_file_, csv_file_, mean=True):
         entry.add_solarwind(solarwind)
 
     print("Json file updated with solarwind information")
-    print(container)
+    #print(container)
 
     container.to_json(json_file_)
     formats(json_file_, csv_file_)

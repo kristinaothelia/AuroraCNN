@@ -217,19 +217,26 @@ def Test(model_name, model_path, LABELS, num):
     predict(model_name, model_path, container, LABELS, save_file, test=True)
 
 
-def Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS):
+def Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS, green=True):
 
-    json_file = 'Aurora_4yr_G_omni_mean.json' # 1618
-    container = DatasetContainer.from_json(mlnodes_path+json_file)
-    save_file = mlnodes_path+json_file[:-5]+'_predicted_'+model_name+'.json'
+    if green:
+        json_file = 'Aurora_4yr_G_omni_mean.json' # 1618
+        container = DatasetContainer.from_json(mlnodes_path+json_file)
+        save_file = mlnodes_path+json_file[:-5]+'_predicted_'+model_name+'.json'
 
-    predict(model_name, model_path, container, LABELS, save_file)
+        predict(model_name, model_path, container, LABELS, save_file)
 
-    json_file = 'Aurora_G_omni_mean.json' # 1420
-    container = DatasetContainer.from_json(mlnodes_path+json_file)
-    save_file = mlnodes_path+json_file[:-5]+'_predicted_'+model_name+'.json'
+        json_file = 'Aurora_G_omni_mean.json' # 1420
+        container = DatasetContainer.from_json(mlnodes_path+json_file)
+        save_file = mlnodes_path+json_file[:-5]+'_predicted_'+model_name+'.json'
 
-    predict(model_name, model_path, container, LABELS, save_file)
+        predict(model_name, model_path, container, LABELS, save_file)
+    else:
+        json_file = 'Aurora_R_omni_mean.json' # 1618
+        container = DatasetContainer.from_json(mlnodes_path+json_file)
+        save_file = mlnodes_path+json_file[:-5]+'_predicted_'+model_name+'.json'
+
+        predict(model_name, model_path, container, LABELS, save_file)
 
 # make predictions with chosen model and data set
 mlnodes_path = '/itf-fi-ml/home/koolsen/Master/'
@@ -237,7 +244,7 @@ mlnodes_path = '/itf-fi-ml/home/koolsen/Master/'
 model_name = model_names[3]
 model_path = "models/report/model1/best_validation/checkpoint-best.pth"
 
-Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS)
+Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS, green=False)
 
 
 def Test_B3():
