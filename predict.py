@@ -36,15 +36,16 @@ warnings.filterwarnings("ignore")
 # -----------------------------------------------------------------------------
 
 # with only 2 classes (aurora/no aurora):
-'''
-path = "models/2class/b2/2021-10-05/best_validation/checkpoint-best.pth"
-model = EfficientNet.from_name(model_name=model_name, num_classes=2, in_channels=1)
+def class2(model_name):
+    #path = "models/2class/b2/2021-10-05/best_validation/checkpoint-best.pth"
+    model_path = "models/2class/b3/24/2022-02-02/best_validation/checkpoint-best.pth"
+    #model = EfficientNet.from_name(model_name=model_name, num_classes=2, in_channels=1)
 
-LABELS = {
-    0: "aurora-less",
-    1: "aurora"
-}
-'''
+    LABELS = {
+        0: "aurora-less",
+        1: "aurora"
+    }
+    return model_path, LABELS
 
 LABELS = {
     0: "aurora-less",
@@ -55,12 +56,15 @@ LABELS = {
 
 model_names = ['efficientnet-b0', 'efficientnet-b1', 'efficientnet-b2', 'efficientnet-b3', 'efficientnet-b4']
 
-def predict(model_name, model_path, container, LABELS, save_file, test=False):
+def predict(model_name, model_path, container, LABELS, save_file, test=False, class2=False):
 
     today = date.today()
     if test:
         save_path = 'datasets/predicted/test/'+model_name[-2:]+'/'+save_file[-6]+'/'
         #save_path = Path('datasets/predicted/test/') / Path(model_name[-2:]) / Path(datetime.today().strftime('%Y-%m-%d')) #/ Path('/')
+        if class2:
+            save_path = 'datasets/predicted/test/'+model_name[-2:]+'/2class'
+            save_file = save_file
     else:
         #save_path =
         save_file = save_file
@@ -87,7 +91,10 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
         ])
 
     #model = Model(1, 4, 128)
-    model = EfficientNet.from_name(model_name=model_name, num_classes=4, in_channels=1)
+    if class2:
+        model = EfficientNet.from_name(model_name=model_name, num_classes=2, in_channels=1)
+    else:
+        model = EfficientNet.from_name(model_name=model_name, num_classes=4, in_channels=1)
 
     checkpoint = torch.load(model_path, map_location='cpu')
     model.load_state_dict(checkpoint['state_dict'])
@@ -208,13 +215,21 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False):
 
 
 
-def Test(model_name, model_path, LABELS, num):
+def Test(model_name, model_path, LABELS, num=None, class2=False):
 
     json_file = 'Full_aurora_ml_test_set.json'
     container = DatasetContainer.from_json('datasets/'+json_file)
-    save_file = json_file[:-5]+'_predicted_'+model_name+'_'+str(num)+'.json'
+    if num is not None:
+        save_file = json_file[:-5]+'_predicted_'+model_name+'_'+str(num)+'.json'
+    elif class2:
+        save_file = json_file[:-5]+'_predicted_'+model_name+'_2class.json'
+    else:
+        save_file = json_file[:-5]+'_predicted_'+model_name+'.json'
 
-    predict(model_name, model_path, container, LABELS, save_file, test=True)
+    if class2:
+        predict(model_name, model_path, container, LABELS, save_file, test=True, class2=True)
+    else:
+        predict(model_name, model_path, container, LABELS, save_file, test=True)
 
 
 def Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS, green=True):
@@ -244,7 +259,7 @@ mlnodes_path = '/itf-fi-ml/home/koolsen/Master/'
 model_name = model_names[3]
 model_path = "models/report/model1/best_validation/checkpoint-best.pth"
 
-Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS, green=False)
+#Predict_on_unlabeld_data(model_name, model_path, mlnodes_path, LABELS, green=False)
 
 
 def Test_B3():
@@ -276,8 +291,15 @@ def Test_B2():
 
     Test(model_name, model_path, LABELS, num)
 
+def Test_2class():
+
+    model_name = model_names[3]
+    model_path, LABELS_2class = class2(model_name)
+    Test(model_name, model_path, LABELS_2class, class2=True)
+
 #Test_B3()
 #Test_B2()
+Test_2class()
 
 """
 # Load json file to add predictions

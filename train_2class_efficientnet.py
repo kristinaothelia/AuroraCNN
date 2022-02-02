@@ -110,8 +110,8 @@ def train(json_file, model_name, ep=100, batch_size_train=8, learningRate=2e-3, 
     params = sum([np.prod(p.size()) for p in model_parameters])
     print('The number of params in Million: ', params/1e6)
 
-    loss         = torch.nn.CrossEntropyLoss(weight=torch.tensor(class_weights))
-    #loss         = torch.nn.CrossEntropyLoss()
+    #loss         = torch.nn.CrossEntropyLoss(weight=torch.tensor(class_weights))
+    loss         = torch.nn.CrossEntropyLoss()
     optimizer    = torch.optim.Adam(params=model.parameters(), lr=learningRate, amsgrad=True)
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=stepSize, gamma=g)
 
@@ -143,3 +143,5 @@ model_name = ['efficientnet-b0',
 #json_file = 'datasets/Full_aurora_ml_corr_NEW_2class.json'
 json_file = 'datasets/Full_aurora_ml_train_valid_set_2class.json'
 train(json_file, model_name[3], ep=160, batch_size_train=24, learningRate=0.01, stepSize=75, g=0.1)
+
+# Run without weights. More aurora data
