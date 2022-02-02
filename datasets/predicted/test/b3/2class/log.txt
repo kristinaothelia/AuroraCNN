@@ -1,0 +1,12 @@
+2022-02-02
+f1 score (all classes): [0.94864048 0.96344086]
+acc (w): 0.9572910152178444. acc:0.957286432160804
+
+              precision    recall  f1-score   support
+
+   no aurora       0.94      0.96      0.95       328
+      aurora       0.97      0.96      0.96       468
+
+    accuracy                           0.96       796
+   macro avg       0.95      0.96      0.96       796
+weighted avg       0.96      0.96      0.96       796
