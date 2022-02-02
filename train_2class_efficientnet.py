@@ -57,6 +57,7 @@ def train(json_file, model_name, ep=100, batch_size_train=8, learningRate=2e-3, 
     print("class count, train: ", [aurora_less, aurora])
 
     class_weights = [aurora_less/aurora_less, aurora_less/aurora]
+    print(class_weights)
 
     # rotation class: numpy arrays. Padding class: pytorch tensors
     train_transforms = torchvision.transforms.Compose([
@@ -141,4 +142,4 @@ model_name = ['efficientnet-b0',
 # NB! Right file?
 #json_file = 'datasets/Full_aurora_ml_corr_NEW_2class.json'
 json_file = 'datasets/Full_aurora_ml_train_valid_set.json'
-train(json_file, model_name[3], ep=200, batch_size_train=24, learningRate=0.01, stepSize=75, g=0.1)
+train(json_file, model_name[3], ep=160, batch_size_train=24, learningRate=0.01, stepSize=75, g=0.1)
