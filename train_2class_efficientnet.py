@@ -139,5 +139,6 @@ model_name = ['efficientnet-b0',
               'efficientnet-b6']
 
 # NB! Right file?
-json_file = 'datasets/Full_aurora_ml_corr_NEW_2class.json'
-train(json_file, model_name[3], ep=300, batch_size_train=16, learningRate=0.01, stepSize=280, g=0.1)
+#json_file = 'datasets/Full_aurora_ml_corr_NEW_2class.json'
+json_file = 'datasets/Full_aurora_ml_train_valid_set.json'
+train(json_file, model_name[3], ep=200, batch_size_train=24, learningRate=0.01, stepSize=75, g=0.1)

@@ -121,7 +121,7 @@ def distribution(container, labels, year=None, month=False):    #, print=False
     return tot, n_less, n_arc, n_diff, n_disc, n_less_M, n_arc_M, n_diff_M, n_disc_M
 
 # make monthly distribution pie charts
-def month_subpie(for_year, n_less, n_arc, n_diff, n_disc, labels, title='', a_less_plot=True):
+def month_subpie(for_year, n_less, n_arc, n_diff, n_disc, labels, title='', wl='', a_less_plot=True):
 
     if a_less_plot == False:
         jan = [n_arc[0], n_diff[0], n_disc[0]]
@@ -141,7 +141,7 @@ def month_subpie(for_year, n_less, n_arc, n_diff, n_disc, labels, title='', a_le
         colors = ['dimgrey','dodgerblue','forestgreen', 'mediumslateblue']
 
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2,2,figsize=(7, 8))
-    fig.suptitle("Distribution for {}".format(title), fontsize=16)
+    fig.suptitle("Distribution for {} [{}]".format(title, wl), fontsize=16)
     angle = 90
 
     # jan
@@ -245,7 +245,7 @@ def bar_chart(container, labels, year, wl, a_less=True, month=False):
             jvals = sizes4
             rects4 = ax.bar(ind+width*3, jvals, width*0.9, color=colors[3], edgecolor = 'black')
 
-            plt.title(r"Distribution of predicted classes, {}".format(wl[0]), fontsize=16)
+            plt.title(r"Distribution of predicted classes [{}]".format(wl[0]), fontsize=16)
             ax.set_xticks(ind+width*1.5)
             ax.legend((rects1[0], rects2[0], rects3[0], rects4[0]), (r'no aurora', r'arc', r'diffuse', r'discrete'), fancybox=True, shadow=True, ncol=2, fontsize=11)
         else:
@@ -258,7 +258,7 @@ def bar_chart(container, labels, year, wl, a_less=True, month=False):
             jvals = sizes4
             rects4 = ax.bar(ind+width*2, jvals, width*0.9, color=colors[3], edgecolor = 'black')
 
-            plt.title(r"Distribution of predicted aurora classes, {}".format(wl[0]), fontsize=16)
+            plt.title(r"Distribution of predicted aurora classes [{}]".format(wl[0]), fontsize=16)
             ax.set_xticks(ind+width)
             ax.legend((rects2[0], rects3[0], rects4[0]), (r'arc', r'diffuse', r'discrete'), fancybox=True, shadow=True, ncol=3, fontsize=11)
 
@@ -294,7 +294,7 @@ def dist_pie_chart(container, labels, year, wl, a_less=True, month=False):
 
             for_year = [n_less, n_arc, n_diff, n_disc]
 
-            month_subpie(for_year, n_less_M, n_arc_M, n_diff_M, n_disc_M, labels, year[i], a_less)
+            month_subpie(for_year, n_less_M, n_arc_M, n_diff_M, n_disc_M, labels, year[i], wl[i], a_less)
 
     else:
 
@@ -472,11 +472,14 @@ def pred_5050(container, title=''):
     print("count: %g, combi: %s (%3.1f%%)" %(test4, (LABELS[1], LABELS[2], LABELS[3]), (test4/c)*100))
     print(((test1/c)*100)+((test2/c)*100)+((test3/c)*100)+((test4/c)*100))
 
-
-def weights_and_stuff():
+def weights_and_stuff(wl):
     print('weights and stuff')
+    if wl == '5577':
+        c = 'Green'
+    elif wl == '6300':
+        c = 'Red'
 
-    pred_5050(container_Full, title='Green. 2014, 2016, 2018 and 2020')
+    pred_5050(container_Full, title='{}. 2014, 2016, 2018 and 2020'.format(c))
     """
     Over 80% pred acc.: 226792 [51.33%]
     50/50 labels: 22484 [5.09%]
@@ -604,7 +607,7 @@ def omni_ting(container, year_='2014', year=False):
     return a_less, arc, diff, disc, neg, pos
 
 
-def sub_plots_Bz(year, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, month_name=None,  N=4):
+def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, month_name=None,  N=4):
 
     bins = np.linspace(-20, 20, 41)
 
@@ -618,9 +621,9 @@ def sub_plots_Bz(year, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, month
         shape = 'x-'
 
     if month_name != None:
-        plt.suptitle(r'$B_z$ distribution for all classes {} {}'.format(month_name, year[:4]), fontsize=26) # 18
+        plt.suptitle(r'$B_z$ distribution for all classes {} {} [{}]'.format(month_name, year, wl), fontsize=26) # 18
     else:
-        plt.suptitle(r'$B_z$ distribution for all classes. {}'.format(year[:4]), fontsize=26)
+        plt.suptitle(r'$B_z$ distribution for all classes. {} [{}]'.format(year, wl), fontsize=26)
 
     #subplot(N,1,1)
     subplot(N/2,N/2,1)
@@ -715,13 +718,13 @@ def sub_plots_Bz(year, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, month
 
     plt.subplots_adjust(top=0.84)
 
-def Bz_stats(container_D, container_N, year):
+def Bz_stats(container_D, container_N, year, wl):
     print('Bz stats')
     print(year)
-    #plt.figure(figsize=(8, 11)) # bredde, hoyde
+
     plt.figure(figsize=(18, 9)) # bredde, hoyde. 11, 8
 
-    if year == 'All years':
+    if year == '2014-2020':
         a_less_Day, arc_Day, diff_Day, disc_Day, neg_Day, pos_Day = omni_ting(container_D)
         a_less_Night, arc_Night, diff_Night, disc_Night, neg_Night, pos_Night = omni_ting(container_N)
     else:
@@ -735,10 +738,7 @@ def Bz_stats(container_D, container_N, year):
     neg = [neg_Day, neg_Night]
     pos = [pos_Day, pos_Night]
 
-    sub_plots_Bz(year, a_less, arc, diff, disc, neg, pos)
-
-    plt.savefig("stats/Green/b3/yearly_Bz_plot_{}_small.png".format(year), bbox_inches="tight")
-    #plt.show()
+    sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos)
 
 
 def Get_hours():
@@ -788,13 +788,52 @@ def stats_aurora(container, label, year=False, weight=False, Bz=False):
     TH = []
     max_score = []
 
-    def data(entry, Years, Month, Clock, Hours, TH, max_score, W=1, weight=False):
+    error = []
+    # Dict vals: [+=error, +1 count] Calculate std later based on nr. of counts
+    error_hour = {"00": [0, 0], "01": [0, 0], "02": [0, 0], "03": [0, 0], \
+                  "04": [0, 0], "05": [0, 0], "06": [0, 0], "07": [0, 0], \
+                  "08": [0, 0], "09": [0, 0], "10": [0, 0], "11": [0, 0], \
+                  "12": [0, 0], "13": [0, 0], "14": [0, 0], "15": [0, 0], \
+                  "16": [0, 0], "17": [0, 0], "18": [0, 0], "19": [0, 0], \
+                  "20": [0, 0], "21": [0, 0], "22": [0, 0], "23": [0, 0]}
+
+    def error_score(entry):
+        if entry.score[entry.label] >= 0.9:
+            #error_d.append(0.1)
+            return 0.1
+        elif entry.score[entry.label] >= 0.5 and entry.score[entry.label] < 0.9:
+            #error_d.append(0.3)
+            return 0.3
+        elif entry.score[entry.label] < 0.5:
+            #error_d.append(0.6)
+            return 0.6
+
+    def data(entry, Years, Month, Clock, Hours, TH, max_score, error_hour, W=1, weight=False):
         Years.append(entry.timepoint[:4])
         #Month.append(entry.timepoint[5:7])
         #Clock.append(entry.timepoint[-8:])
         Hours.append(entry.timepoint[-8:-6])
         TH.append(entry.timepoint[5:7]+entry.timepoint[-8:-6]) # Month, day and hour
         #max_score.append(entry.score[entry.label])
+
+        if entry.score[entry.label] >= 0.9:
+            eps = 0.1
+        elif entry.score[entry.label] >= 0.5 and entry.score[entry.label] < 0.9:
+            eps = 0.4
+        elif entry.score[entry.label] < 0.5:
+            eps = 0.8
+
+        old_score = error_hour[entry.timepoint[-8:-6]]
+        new_score = eps
+
+        edit = [old_score[0]+new_score, old_score[1]+1]
+        error_hour.update({entry.timepoint[-8:-6]: edit})
+
+        #error_hour[entry.timepoint[-8:-6]] = list()
+        #error_hour[entry.timepoint[-8:-6]] = error_score(entry) #.extend(error)
+
+        #exit()
+
 
         if weight:
             for i in range(W):
@@ -814,6 +853,7 @@ def stats_aurora(container, label, year=False, weight=False, Bz=False):
     if year:
 
         for entry in container:
+
             if entry.timepoint[:4] == year:
 
                 if weight:
@@ -860,12 +900,12 @@ def stats_aurora(container, label, year=False, weight=False, Bz=False):
                 else:
                     if label == LABELS[0] or LABELS[1] or LABELS[2] or LABELS[3]:
                         if entry.label == label:
-                            data(entry, Years, Month, Clock, Hours, TH, max_score)
+                            data(entry, Years, Month, Clock, Hours, TH, max_score, error_hour)
 
                     if label == "aurora": # arc, diffuse and discrete aurora is counted as one
                         if entry.label != LABELS[0]:
                             #print(entry.timepoint) # YYYY-MM-DD hh:mm:ss
-                            data(entry, Years, Month, Clock, Hours, TH, max_score)
+                            data(entry, Years, Month, Clock, Hours, TH, max_score, error_hour)
 
     else:
         for entry in container:
@@ -914,15 +954,15 @@ def stats_aurora(container, label, year=False, weight=False, Bz=False):
             else:
                 if label == LABELS[0] or LABELS[1] or LABELS[2] or LABELS[3]:
                     if entry.label == label:
-                        data(entry, Years, Month, Clock, Hours, TH, max_score)
+                        data(entry, Years, Month, Clock, Hours, TH, max_score, error_hour)
 
                 if label == "aurora": # arc, diffuse and discrete aurora is counted as one
                     if entry.label != LABELS[0]:
                         #print(entry.timepoint) # YYYY-MM-DD hh:mm:ss
-                        data(entry, Years, Month, Clock, Hours, TH, max_score)
+                        data(entry, Years, Month, Clock, Hours, TH, max_score, error_hour)
 
 
-    return Years, Month, Clock, Hours, TH, max_score
+    return Years, Month, Clock, Hours, TH, max_score, error, error_hour
 
 def get_hour_count_per_month(TH, hours):
 
@@ -989,7 +1029,7 @@ def plot_hourly_nor(hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, year, month=None,
         plt.savefig("stats/Green/b3/hour_lineplot_{}.png".format(year))
 
 
-def sub_plots(year, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=None, month_name=None,  N=4):
+def sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, error, T_Aurora_N=None, month_name=None,  N=4):
 
     #f = plt.figure(figsize=(10,3))
 
@@ -1004,42 +1044,53 @@ def sub_plots(year, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=None, 
 
     subplot(N,1,1)
     if month_name != None:
-        plt.title('Statistics ({}) for all classes'.format(month_name), fontsize=18)
+        plt.title('Statistics ({}) for all classes [{}]'.format(month_name, wl), fontsize=18)
     else:
         if len(year) > 4:
-            plt.title('Yearly statistics for all classes (weighted)', fontsize=18)
+            plt.title('Yearly statistics for all classes (weighted) [{}]'.format(wl), fontsize=18)
         else:
-            plt.title('Yearly statistics for all classes', fontsize=18)
+            plt.title('Yearly statistics for all classes [{}]'.format(wl), fontsize=18)
     plt.plot(hours, T_arc_N, shape, label='arc - '+year)
+    e = error[1]/2  # For 1.5 lim
+    plt.errorbar(hours, T_arc_N, yerr=e, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
     plt.ylabel("%", fontsize=15)
+    #plt.ylim(-0.2, 3)
     plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True) #, ncol=2
     #plot(hours, T_arc_N, 'arc', year, month=None, monthly=False)
 
     subplot(N,1,2)
     #plot(hours, T_diff_N, 'diffuse', year, month=None, monthly=False)
     plt.plot(hours, T_diff_N, shape, label='diffuse - '+year)
+    plt.errorbar(hours, T_diff_N, yerr=error[2], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
     plt.ylabel("%", fontsize=15)
+    #plt.ylim(0, 4)
     plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
 
     subplot(N,1,3)
     #plot(hours, T_disc_N, 'discrete', year, month=None, monthly=False)
     plt.plot(hours, T_disc_N, shape, label='discrete - '+year)
+    plt.errorbar(hours, T_disc_N, yerr=error[3], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)    # elinewidth=0.1,
     plt.ylabel("%", fontsize=15)
+    #plt.ylim(0, 4)
     plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
 
     subplot(N,1,4)
     #plot(hours, T_c_N, 'no aurora', year, month=None, monthly=False, axis=True)
     plt.plot(hours, T_c_N, shape, label='no aurora - '+year)
+    plt.errorbar(hours, T_c_N, yerr=error[0], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
     #plt.xlabel("Hour of the day", fontsize=13)
     plt.ylabel("%", fontsize=15)
+    #plt.ylim(0, 4)
     plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
 
     if N == 5:
         subplot(N,1,5)
         #plot(hours, T_c_N, 'no aurora', year, month=None, monthly=False, axis=True)
         plt.plot(hours, T_Aurora_N, shape, label='aurora - '+year)
+        plt.errorbar(hours, T_Aurora_N, yerr=error[4], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
         plt.xlabel("Hour of the day", fontsize=15)
         plt.ylabel("%", fontsize=15)
+        #plt.ylim(0, 4.5)
         plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
     else:
         plt.xlabel("Hour of the day", fontsize=15)
@@ -1047,15 +1098,29 @@ def sub_plots(year, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=None, 
     #plt.tight_layout(rect=[0,0,0.75,1])
 
 
-def Hour_subplot(container, year, month_name='Jan', N=4, month=False, weight=False):
+def Hour_subplot(container, year, wl, month_name='Jan', N=4, month=False, weight=False):
 
     hours = Get_hours()
 
-    Years, Months, Clock, Hours, TH, max_score = stats_aurora(container=container, label="aurora-less", year=year[:4], weight=weight)
-    Years_arc, Months_arc, Clock_arc, Hours_arc, TH_arc, max_score_arc = stats_aurora(container=container, label="arc", year=year[:4], weight=weight)
-    Years_diff, Months_diff, Clock_diff, Hours_diff, TH_diff, max_score_diff = stats_aurora(container=container, label="diffuse", year=year[:4], weight=weight)
-    Years_disc, Months_disc, Clock_disc, Hours_disc, TH_disc, max_score_disc = stats_aurora(container=container, label="discrete", year=year[:4], weight=weight)
-    Years_A, Months_A, Clock_A, Hours_A, TH_A, max_score_A = stats_aurora(container=container, label="aurora", year=year[:4], weight=weight)
+    Years, Months, Clock, Hours, TH, max_score, error, err_h = stats_aurora(container=container, label="aurora-less", year=year[:4], weight=weight)
+    Years_arc, Months_arc, Clock_arc, Hours_arc, TH_arc, max_score_arc, error_arc, err_h_arc = stats_aurora(container=container, label="arc", year=year[:4], weight=weight)
+    Years_diff, Months_diff, Clock_diff, Hours_diff, TH_diff, max_score_diff, error_diff, err_h_diff = stats_aurora(container=container, label="diffuse", year=year[:4], weight=weight)
+    Years_disc, Months_disc, Clock_disc, Hours_disc, TH_disc, max_score_disc, error_disc, err_h_disc = stats_aurora(container=container, label="discrete", year=year[:4], weight=weight)
+    Years_A, Months_A, Clock_A, Hours_A, TH_A, max_score_A, error_A, err_h_A = stats_aurora(container=container, label="aurora", year=year[:4], weight=weight)
+
+    list = [err_h, err_h_arc, err_h_diff, err_h_disc, err_h_A]
+    list_arrays = []
+
+    for i in range(len(list)):
+        error_std = []
+        for key, value in list[i].items():
+            #print('key/hour', 'value/error', 'error std')
+            #print(key, value, value[0]/value[1])
+            error_std.append(value[0]/value[1])
+            #error_std[value] = value[0]/value[1]
+
+        error_hist = np.array(error_std)
+        list_arrays.append(error_hist)
 
     if month:
 
@@ -1101,7 +1166,7 @@ def Hour_subplot(container, year, month_name='Jan', N=4, month=False, weight=Fal
         index = M_label_N.index(month_name)
         print(M_label_N[index])
 
-        sub_plots(year, hours, T_c_N[index], T_arc_N[index], T_diff_N[index], T_disc_N[index], T_A_N[index], month_name=month_name, N=N)
+        sub_plots(year, wl, hours, T_c_N[index], T_arc_N[index], T_diff_N[index], T_disc_N[index], T_A_N[index], month_name=month_name, N=N)
 
 
         '''
@@ -1183,7 +1248,7 @@ def Hour_subplot(container, year, month_name='Jan', N=4, month=False, weight=Fal
         '''
         #plot(hours, T_Aurora_N, 'Aurora', year, month=None, monthly=False)
         #sub_plots(year, hours, T_c, T_arc, T_diff, T_disc, T_Aurora, N=5)
-        sub_plots(year, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N, N=N)
+        sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, list_arrays, T_Aurora_N, N=N)
 
         """
         #plot(hours, T_arc_N, 'arc', year, month=None, monthly=False)
@@ -1214,10 +1279,21 @@ if __name__ == "__main__":
 
     LABELS = ['aurora-less', 'arc', 'diffuse', 'discrete']
 
-    # All 4 years, jan+nov+dec
-    predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3.json'
-    container_Full = DatasetContainer.from_json(predicted_G_Full)
-    print("len container Full: ", len(container_Full))
+    Green = False
+    if Green:
+
+        # All 4 years, jan+nov+dec
+        predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3.json'
+        container_Full = DatasetContainer.from_json(predicted_G_Full)
+        print("len container Full: ", len(container_Full))
+        wl = [r'5577 Å', r'5577 Å', r'5577 Å', r'5577 Å']
+
+    else:
+        # All 4 years, jan+nov+dec
+        predicted_R_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_R_omni_mean_predicted_efficientnet-b3.json'
+        container_Full = DatasetContainer.from_json(predicted_R_Full)
+        print("len container Full: ", len(container_Full))
+        wl = [r'6300 Å', r'6300 Å', r'6300 Å', r'6300 Å']
 
     # Print distributions
     #distribution(container_Full, LABELS, year='2014', print=True)
@@ -1227,64 +1303,86 @@ if __name__ == "__main__":
 
     # Make distribution plots
     year = [r'2014', r'2016', r'2018', r'2020']
-    wl = [r'5577 Å', r'5577 Å', r'5577 Å', r'5577 Å']
 
-    # Pie chart for each year
-    '''
-    dist_pie_chart(container_Full, LABELS, year, wl, month=False)
-    dist_pie_chart(container_Full, LABELS, year, wl, a_less=False, month=False)
-    plt.show()
-    '''
+    # Pie chart for each year (Manual plot saving)
+    #dist_pie_chart(container_Full, LABELS, year, wl, month=False)
+    #dist_pie_chart(container_Full, LABELS, year, wl, a_less=False, month=False)
+    #plt.show()
 
-    # Pie chart for months
-    '''
-    dist_pie_chart(container_Full, LABELS, year, wl, month=True)
-    dist_pie_chart(container_Full, LABELS, year, wl, month=True, a_less=False)
-    plt.show()
-    '''
+    # Pie chart for months (Manual plot saving)
+    #dist_pie_chart(container_Full, LABELS, year, wl, month=True)
+    #dist_pie_chart(container_Full, LABELS, year, wl, month=True, a_less=False)
+    #plt.show()
 
     # Bar charts
-    '''
-    bar_chart(container_Full, LABELS, year, wl, a_less=True, month=False)
-    bar_chart(container_Full, LABELS, year, wl, a_less=False, month=False)
-    plt.show()
-    '''
+    Bar = False
+    if Bar:
+        if Green:
+            bar_chart(container_Full, LABELS, year, wl, a_less=True, month=False)
+            plt.savefig("Stats/Green/b3/bar_distribution_all.png")
+            bar_chart(container_Full, LABELS, year, wl, a_less=False, month=False)
+            plt.savefig("Stats/Green/b3/bar_distribution_aurora.png")
+            #plt.show()
+        else:
+            bar_chart(container_Full, LABELS, year, wl, a_less=True, month=False)
+            plt.savefig("Stats/Red/b3/bar_distribution_all_R.png")
+            bar_chart(container_Full, LABELS, year, wl, a_less=False, month=False)
+            plt.savefig("Stats/Red/b3/bar_distribution_aurora_R.png")
+            #plt.show()
 
-    # Check entries with equal label probability
-    #weights_and_stuff()
 
     # Bz distribution plots
-    def Bz_distribution_plots():
+    def Bz_distribution_plots(path, wl, Green=True):
 
-        path = r'C:\Users\Krist\Documents\ASI_json_files'
-        D = r'\AuroraFull_G_omni_mean_predicted_efficientnet-b3_daytime.json'
-        N = r'\AuroraFull_G_omni_mean_predicted_efficientnet-b3_nighttime.json'
-        container_D = DatasetContainer.from_json(path+D)
-        container_N = DatasetContainer.from_json(path+N)
+        years = [r'2014', r'2016', r'2018', r'2020', r'2014-2020']
+        path_ASI = r'C:\Users\Krist\Documents\ASI_json_files'
+
+        if Green:
+            D = r'\AuroraFull_G_omni_mean_predicted_efficientnet-b3_daytime.json'
+            N = r'\AuroraFull_G_omni_mean_predicted_efficientnet-b3_nighttime.json'
+        else:
+            D = r'\AuroraFull_R_omni_mean_predicted_efficientnet-b3_daytime.json'
+            N = r'\AuroraFull_R_omni_mean_predicted_efficientnet-b3_nighttime.json'
+
+        container_D = DatasetContainer.from_json(path_ASI+D)
+        container_N = DatasetContainer.from_json(path_ASI+N)
         print('len container day:   ', len(container_D))
         print('len container night: ', len(container_N))
 
-        Bz_stats(container_D, container_N, year='2014')
-        Bz_stats(container_D, container_N, year='2016')
-        Bz_stats(container_D, container_N, year='2018')
-        Bz_stats(container_D, container_N, year='2020')
-        Bz_stats(container_D, container_N, year='All years')
+        for i in range(len(years)):
+            Bz_stats(container_D, container_N, years[i], wl)
+            plt.savefig(path+r'yearly_Bz_plot_{}_small.png'.format(years[i]), bbox_inches="tight")
 
-    Bz_distribution_plots()
-    exit()
+    if Green:
+        print('Green')
+        #Bz_distribution_plots(path=r'stats/Green/b3/', wl=wl[0])
+    else:
+        print('Red')
+        #Bz_distribution_plots(path=r'stats/Red/b3/', wl=wl[0], Green=False)
+
+
+    # Check entries with equal label probability
+    #weights_and_stuff(wl=wl[0][:4])
+
 
     # Make hour plots (line plots)
     # Yearly
-    '''
-    plt.figure(figsize=(8, 11)) # bredde, hoyde
-    Hour_subplot(container=container_Full, year="2014", N=5, month=False)
-    Hour_subplot(container=container_Full, year="2016", N=5, month=False)
-    Hour_subplot(container=container_Full, year="2018", N=5, month=False)
-    Hour_subplot(container=container_Full, year="2020", N=5, month=False)
+    N = 4
 
-    plt.savefig("stats/Green/b3/yearly_hour_plot.png", bbox_inches="tight")
+    plt.figure(figsize=(8, 11)) # bredde, hoyde
+    Hour_subplot(container=container_Full, year="2014", wl=wl[0], N=N, month=False)
+    Hour_subplot(container=container_Full, year="2016", wl=wl[0], N=N, month=False)
+    Hour_subplot(container=container_Full, year="2018", wl=wl[0], N=N, month=False)
+    Hour_subplot(container=container_Full, year="2020", wl=wl[0], N=N, month=False)
+
+    if Green:
+        plt.savefig("stats/Green/b3/yearly_hour_plot_{}.png".format(N), bbox_inches="tight")
+    else:
+        plt.savefig("stats/Red/b3/yearly_hour_plot_R_{}.png".format(N), bbox_inches="tight")
     #plt.show()
-    '''
+
+    exit()
+
 
     # Monthly
     MN = ['Jan', 'Nov', 'Dec']
@@ -1292,11 +1390,15 @@ if __name__ == "__main__":
     for i in range(len(MN)):
 
         plt.figure(figsize=(8, 11)) # bredde, hoyde
-        Hour_subplot(container=container_Full, year="2014", month_name=MN[i], N=5,month=True)
-        Hour_subplot(container=container_Full, year="2016", month_name=MN[i], N=5,month=True)
-        Hour_subplot(container=container_Full, year="2018", month_name=MN[i], N=5,month=True)
-        Hour_subplot(container=container_Full, year="2020", month_name=MN[i], N=5,month=True)
-        plt.savefig("stats/Green/b3/monthly_hour_plot_{}.png".format(MN[i]), bbox_inches="tight")
+        Hour_subplot(container=container_Full, year="2014", wl=wl[0], month_name=MN[i], N=5,month=True)
+        Hour_subplot(container=container_Full, year="2016", wl=wl[0], month_name=MN[i], N=5,month=True)
+        Hour_subplot(container=container_Full, year="2018", wl=wl[0], month_name=MN[i], N=5,month=True)
+        Hour_subplot(container=container_Full, year="2020", wl=wl[0], month_name=MN[i], N=5,month=True)
+        if Green:
+            plt.savefig("stats/Green/b3/monthly_hour_plot_{}.png".format(MN[i]), bbox_inches="tight")
+        else:
+            plt.savefig("stats/Red/b3/monthly_hour_plot_{}_R.png".format(MN[i]), bbox_inches="tight")
+            #plt.show()
         #plt.show()
 
     # hmmm, funker ikke helt..

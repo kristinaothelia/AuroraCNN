@@ -19,12 +19,9 @@ def remove(container):
     print('removed images from container: ', counter)
     print('new container len: ', len(container))
 
-    #container.to_json(r'C:\Users\Krist\Documents\ASI_json_files\Aurora_G_omni_mean_predicted_efficientnet-b3_cut.json')
+    container.to_json(r'C:\Users\Krist\Documents\ASI_json_files\Aurora_G_omni_mean_predicted_efficientnet-b3_cut.json')
 
-# All 4 years, jan+nov+dec
-predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3.json'
-
-def split(container, nightside=False):
+def split(container, to_json, nightside=False):
 
     day_start = 6
     day_end = 17
@@ -44,7 +41,7 @@ def split(container, nightside=False):
         print('removed images from container: ', counter)
         print('new container len: ', len(container))
 
-        container.to_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_nighttime.json')
+        container.to_json(to_json)
         return container
 
     else:
@@ -67,12 +64,12 @@ def split(container, nightside=False):
         #print('removed images from container: ', counter)
         print('new container len: ', len(container))
 
-        container.to_json(r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_daytime.json')
+        container.to_json(to_json)
         return container
 
-def split_container(container, nightside=False):
+def split_container(container, to_json, nightside=False):
 
-    container = split(container, nightside)
+    container = split(container, to_json, nightside)
 
     times = []
     for entry in container:
@@ -82,9 +79,33 @@ def split_container(container, nightside=False):
 
     return container
 
-container_Full = DatasetContainer.from_json(predicted_G_Full)
-print(len(container_Full))
-container_D = split_container(container_Full)
+def Make_files(json_file, json_day, json_night):
+    container_Full = DatasetContainer.from_json(json_file)
+    print(len(container_Full))
+    container_D = split_container(container_Full, json_day)
 
-container_Full = DatasetContainer.from_json(predicted_G_Full)
-container_N = split_container(container_Full, True)
+    container_Full = DatasetContainer.from_json(predicted_R_Full)
+    container_N = split_container(container_Full, json_night, True)
+
+
+if __name__ == "__main__":
+
+    # All 4 years, jan+nov+dec
+    predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3.json'
+    predicted_R_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_R_omni_mean_predicted_efficientnet-b3.json'
+
+    to_json_R_night = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_R_omni_mean_predicted_efficientnet-b3_nighttime.json'
+    to_json_R_day = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_R_omni_mean_predicted_efficientnet-b3_daytime.json'
+
+    to_json_G_night = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_nighttime.json'
+    to_json_G_day = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3_daytime.json'
+
+    # If container include images from months Feb, Mar, Oct
+    #remove(predicted_G_Full)
+
+    # Split original data set into sets containing nightside and dayside data
+    # Red
+    Make_files(predicted_R_Full, to_json_R_day, to_json_R_night)
+
+    # Green
+    Make_files(predicted_G_Full, to_json_G_day, to_json_G_night)

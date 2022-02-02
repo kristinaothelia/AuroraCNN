@@ -16,6 +16,7 @@ LABELS = ['aurora-less', 'arc', 'diffuse', 'discrete']
 
 # All 4 years, jan+nov+dec
 predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3.json'
+predicted_R_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_R_omni_mean_predicted_efficientnet-b3.json'
 container_Full = DatasetContainer.from_json(predicted_G_Full)
 print("len container Full: ", len(container_Full))
 
@@ -149,7 +150,7 @@ def omni_ting(container, year_='2014', year=False):
 
     return a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG, a_less_POS_err, a_less_NEG_err, test_p, test_n
 
-def sub_plots(year, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=None, month_name=None,  N=4, shape='*-'):
+def sub_plots(year, wl, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=None, month_name=None,  N=4, shape='*-'):
 
     '''
     if year == 'All years':
@@ -167,10 +168,10 @@ def sub_plots(year, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=
 
     subplot(N,1,1)
     if month_name != None:
-        plt.suptitle('Classification for positive and negative Bz, {} {}'.format(month_name, year), fontsize=18)
+        plt.suptitle('Classification for positive and negative Bz, {} {} [{}]'.format(month_name, year, wl), fontsize=18)
         #plt.title('Statistics ({}) for all classes, {}'.format(month_name, year), fontsize=18)
     else:
-        plt.suptitle('Classification for positive and negative Bz, {}'.format(year), fontsize=18)
+        plt.suptitle('Classification for positive and negative Bz, {} [{}]'.format(year, wl), fontsize=18)
         #plt.title('Statistics for all classes, {}'.format(year), fontsize=18)
 
     plt.plot(hours, T_arc_N, shape, label='{}'.format(name))
@@ -182,7 +183,7 @@ def sub_plots(year, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=
     #plt.text(18.5, 3.5, 'nightside', fontsize = 11, color='deepskyblue')
     plt.title('arc', fontsize=15)
     plt.ylabel("%", fontsize=15)
-    plt.ylim(0, 2.1)
+    plt.ylim(-0.1, 2.1)
     plt.xticks(fontsize=11)
     plt.yticks(fontsize=11)
     #plt.legend(fontsize=13)
@@ -202,7 +203,7 @@ def sub_plots(year, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=
     #plt.text(18.5, 3.5, 'nightside', fontsize = 11, color='deepskyblue')
     plt.title('diffuse', fontsize=15)
     plt.ylabel("%", fontsize=15)
-    plt.ylim(0, 3.4)
+    plt.ylim(-0.1, 4.0)
     plt.xticks(fontsize=11)
     plt.yticks(fontsize=11)
     #plt.legend(fontsize=13)
@@ -219,7 +220,7 @@ def sub_plots(year, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=
     #plt.text(18.5, 3.5, 'nightside', fontsize = 11, color='deepskyblue')
     plt.title('discrete', fontsize=15)
     plt.ylabel("%", fontsize=15)
-    plt.ylim(0, 3.6)
+    plt.ylim(-0.1, 4.3)
     plt.xticks(fontsize=11)
     plt.yticks(fontsize=11)
     #plt.legend(fontsize=13)
@@ -239,6 +240,7 @@ def sub_plots(year, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=
     plt.ylabel("%", fontsize=15)
     plt.xticks(fontsize=11)
     plt.yticks(fontsize=11)
+    plt.ylim(-0.1, 4.6)
     #plt.legend(fontsize=13)
     #plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
 
@@ -257,11 +259,11 @@ def sub_plots(year, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Aurora_N=
         plt.ylabel("%", fontsize=15)
         plt.xticks(fontsize=11)
         plt.yticks(fontsize=11)
+        plt.ylim(-0.1, 4.6)
         #plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
     else:
         plt.xlabel("Hour of the day", fontsize=15, labelpad=25)
 
-    plt.ylim(0, 4.6)
     plt.tight_layout() #rect=[0,0,0.75,1]
     plt.subplots_adjust(top=0.85)
 
@@ -278,7 +280,7 @@ def Get_hours():
         times.append(str)
     return times
 
-def Hour_subplot(container, year_="2014", month_name='Jan', N=4, month=False, weight=False, year=False):
+def Hour_subplot(container, wl, year_="2014", month_name='Jan', N=4, month=False, weight=False, year=False):
 
     hours = Get_hours()
     Hours_POS, Hours_NEG            = aurora_Bz_stats(container=container, label="aurora-less", year_=year_, year=year)
@@ -428,8 +430,8 @@ def Hour_subplot(container, year_="2014", month_name='Jan', N=4, month=False, we
 
         names = ["Bz >= 0", "Bz < 0"]
 
-        sub_plots(year_, hours, names[0], T_c_N_POS, T_arc_N_POS, T_diff_N_POS, T_disc_N_POS, T_Aurora_N_POS, shape='o-')
-        sub_plots(year_, hours, names[1], T_c_N_NEG, T_arc_N_NEG, T_diff_N_NEG, T_disc_N_NEG, T_Aurora_N_NEG, shape='*-')
+        sub_plots(year_, wl, hours, names[0], T_c_N_POS, T_arc_N_POS, T_diff_N_POS, T_disc_N_POS, T_Aurora_N_POS, shape='o-')
+        sub_plots(year_, wl, hours, names[1], T_c_N_NEG, T_arc_N_NEG, T_diff_N_NEG, T_disc_N_NEG, T_Aurora_N_NEG, shape='*-')
 
 
 
@@ -686,22 +688,24 @@ def Bz_stats(year):
     plt.show()
 
 # Make
-Bz_stats(year='2014')
+#Bz_stats(year='2014')
 #Bz_stats(year='2016')
 #Bz_stats(year='2018')
 #Bz_stats(year='2020')
 #Bz_stats(year='All years')
 
-exit()
+#exit()
 
 def Bz_split(container, year_="All years", month=False, year=False):
 
     plt.figure(figsize=(8, 8)) # bredde, hoyde
-    Hour_subplot(container=container, year_=year_, month=month, year=year)
+    Hour_subplot(container=container, wl='5577 Å', year_=year_, month=month, year=year)
+    #Hour_subplot(container=container, wl='6300 Å', year_=year_, month=month, year=year)
     plt.text(1.5, -1.8, 'nightside', fontsize = 13, color='deepskyblue')
     plt.text(10.9, -1.8, 'dayside', fontsize = 13, color='limegreen')
     plt.text(19.1, -1.8, 'nightside', fontsize = 13, color='deepskyblue')
     plt.savefig('stats/Green/b3/TEST_{}.png'.format(year_), bbox_inches="tight")
+    #plt.savefig('stats/Red/b3/TEST_{}_R.png'.format(year_), bbox_inches="tight")
     #plt.show()
 
 Bz_split(container=container_Full)
