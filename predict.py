@@ -185,7 +185,10 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False, cl
         print(len(y_true))
 
         def metrics(y_true, y_pred):
-            report = sk.metrics.classification_report(y_true, y_pred, target_names=['no a','arc','diff','disc'])
+            if class2:
+                report = sk.metrics.classification_report(y_true, y_pred, target_names=['no aurora','aurora'])
+            else:
+                report = sk.metrics.classification_report(y_true, y_pred, target_names=['no a','arc','diff','disc'])
             f1 = f1_score(y_true, y_pred, average=None) #The best value is 1 and the worst value is 0
             accuracy =accuracy_score(y_true, y_pred)
             accuracy_w = balanced_accuracy_score(y_true, y_pred) #The best value is 1 and the worst value is 0 when adjusted=False
@@ -209,7 +212,10 @@ def predict(model_name, model_path, container, LABELS, save_file, test=False, cl
 
         # Normalized
         N_cm = CM/CM.sum(axis=1)[:, np.newaxis]
-        class_names = [r'no aurora', r'arc', r'diffuse', r'discrete']
+        if class2:
+            class_names = [r'no aurora', r'aurora']
+        else:
+            class_names = [r'no aurora', r'arc', r'diffuse', r'discrete']
 
         plt.figure() # figsize=(15,10)
         df_cm = pd.DataFrame(N_cm, index=class_names, columns=class_names).astype(float)
