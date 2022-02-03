@@ -139,8 +139,8 @@ class BaseTrainer:
         print("Training time [h]: ", train_end_time/(60*60))
 
         log = open(self.checkpoint_dir / "log.txt", "w")
-        log.write("Model {}\n".format(self.model_info[-2]))
-        log.write("Class weights {}\n".format(self.model_info[-1]))
+        log.write("Model {}\n".format(self.model_info[-1]))
+        log.write("Class weights {}\n".format(self.model_info[-2]))
         log.write("Training time [h]: {}\n".format(train_end_time/(60*60)))
         log.write("The number of params in Million: {}\n".format(self.model_info[4]))
         log.write("Best epoch {} of {}. Validation acc: {}\n".format(best_ep, self.epochs, best_acc))
