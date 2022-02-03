@@ -172,7 +172,8 @@ class BaseTrainer:
         heatmap.xaxis.set_ticklabels(heatmap.xaxis.get_ticklabels(), rotation=45, ha='right',fontsize=12)
         plt.ylabel(r'Observed class',fontsize=13) # True label
         plt.xlabel(r'Predicted class',fontsize=13)
-        plt.title(r'Norm. confusion matrix for EfficientNet model B{}'.format(self.model_info[-2])+'\n'+r'Validation accuracy: {:.2f}'.format(best_acc),fontsize=14)
+        plt.title(r'Norm. confusion matrix for EfficientNet model B{}'.format(self.model_info[-1])+'\n'+r'Validation accuracy: {:.2f}'.format(best_acc),fontsize=14)
+        #plt.title(r'Norm. confusion matrix for EfficientNet model B{}'.format(self.model_info[-2])+'\n'+r'Validation accuracy: {:.2f}'.format(best_acc),fontsize=14)
         #plt.show(block=True)
         plt.tight_layout()
         plt.savefig(str(self.checkpoint_dir) + "/CM_normalized.png")
@@ -182,7 +183,8 @@ class BaseTrainer:
             ep = np.linspace(self.start_epoch, self.epochs, self.epochs)
 
             plt.figure()
-            plt.title("Loss and accuracy for EfficientNet model B{}".format(self.model_info[-2])+'\n'+r'Save point validation accuracy: {:.2f}'.format(best_acc),fontsize=14)
+            plt.title("Loss and accuracy for EfficientNet model B{}".format(self.model_info[-1])+'\n'+r'Save point validation accuracy: {:.2f}'.format(best_acc),fontsize=14)
+            #plt.title("Loss and accuracy for EfficientNet model B{}".format(self.model_info[-2])+'\n'+r'Save point validation accuracy: {:.2f}'.format(best_acc),fontsize=14)
             plt.plot(ep, t_loss, label="Training loss")
             plt.plot(ep, v_loss, label="Validation loss")
             plt.plot(ep, v_acc, label="Validation accuracy")
