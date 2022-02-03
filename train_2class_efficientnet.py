@@ -55,10 +55,8 @@ def train(json_file, model_name, ep=100, batch_size_train=8, learningRate=2e-3, 
 
     aurora_less, aurora = count(train)
     print("class count, train: ", [aurora_less, aurora])
-    largest_class = np.argmax([aurora_less, aurora])
-    print(largest_class)
-    #class_weights = [aurora/aurora_less, aurora/aurora]
-    class_weights = [largest_class/aurora_less, largest_class/aurora]
+    class_weights = [aurora/aurora_less, aurora/aurora]
+    #class_weights = [largest_class/aurora_less, largest_class/aurora]
     print(class_weights)
 
     # rotation class: numpy arrays. Padding class: pytorch tensors
