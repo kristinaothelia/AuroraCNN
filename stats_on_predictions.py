@@ -629,7 +629,9 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, m
     subplot(N/2,N/2,1)
     plt.title(r'arc', fontsize = 22)
     a_heights, a_bins = np.histogram(arc[0], bins=bins, density=True)
+    #a_heights = a_heights / a_heights.sum()
     b_heights, b_bins = np.histogram(arc[1], bins=bins, density=True)
+    #b_heights = b_heights / b_heights.sum()
     plt.plot(a_bins[:-1], a_heights, 'o-', label=r'dayside')
     plt.plot(b_bins[:-1], b_heights, '*-', label=r'nightside')
     plt.text(-19, 0.26, r'$B_z < 0$:  {:.1f}%'.format(neg[0][1]), fontsize = 19, color='C0')
@@ -641,7 +643,7 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, m
     #plt.text(-19, 0.13, 'Max: {:.1f}, Min: {:.1f}'.format(np.max(pos[1][1]), np.min(neg[1][1])), fontsize = 17, color='C1')
     plt.axvline(x=0, ls='--', color='lightgrey')
     #plt.plot(hours, T_arc_N, shape, label='arc - '+year)
-    plt.ylabel("%", fontsize=22, color='r')    # 15
+    plt.ylabel(r"Occurence (norm.)", fontsize=22)    # 15
     plt.ylim(-0.01, 0.30)
     plt.xticks(fontsize=19)
     plt.yticks(fontsize=19) # 11
@@ -664,7 +666,7 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, m
     plt.axvline(x=0, ls='--', color='lightgrey')
     #plot(hours, T_diff_N, 'diffuse', year, month=None, monthly=False)
     #plt.plot(hours, T_diff_N, shape, label='diffuse - '+year)
-    plt.ylabel("%", fontsize=22, color='r')    # 15
+    plt.ylabel(r"Occurence (norm.)", fontsize=22)    # 15
     plt.ylim(-0.01, 0.30)
     plt.xticks(fontsize=19)
     plt.yticks(fontsize=19) # 11
@@ -685,7 +687,7 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, m
     plt.axvline(x=0, ls='--', color='lightgrey')
     #plot(hours, T_disc_N, 'discrete', year, month=None, monthly=False)
     #plt.plot(hours, T_disc_N, shape, label='discrete - '+year)
-    plt.ylabel(r"count (normalized)", fontsize=22, color='r')    # 15
+    plt.ylabel(r"Occurence (norm.)", fontsize=22)    # 15
     plt.ylim(-0.01, 0.30)
     plt.xticks(fontsize=19)
     plt.yticks(fontsize=19) # 11
@@ -708,7 +710,7 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, m
     #plot(hours, T_c_N, 'no aurora', year, month=None, monthly=False, axis=True)
     #plt.plot(hours, T_c_N, shape, label='no aurora - '+year)
     #plt.xlabel("Hour of the day", fontsize=13)
-    plt.ylabel(r"percentage", fontsize=22, color='r')    # 15
+    plt.ylabel(r"Occurence (norm.)", fontsize=22)    # 15
     plt.ylim(-0.01, 0.30)
     plt.xticks(fontsize=19)
     plt.yticks(fontsize=19) # 11
@@ -739,6 +741,7 @@ def Bz_stats(container_D, container_N, year, wl):
     pos = [pos_Day, pos_Night]
 
     sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos)
+
 
 
 def Get_hours():
@@ -1053,7 +1056,7 @@ def sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, error, T_Auro
     plt.plot(hours, T_arc_N, shape, label='arc - '+year)
     e = error[1]/2  # For 1.5 lim
     plt.errorbar(hours, T_arc_N, yerr=e, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
-    plt.ylabel("%", fontsize=15)
+    plt.ylabel(r"Occurence (norm.)", fontsize=15)
     #plt.ylim(-0.2, 3)
     plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True) #, ncol=2
     #plot(hours, T_arc_N, 'arc', year, month=None, monthly=False)
@@ -1062,7 +1065,7 @@ def sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, error, T_Auro
     #plot(hours, T_diff_N, 'diffuse', year, month=None, monthly=False)
     plt.plot(hours, T_diff_N, shape, label='diffuse - '+year)
     plt.errorbar(hours, T_diff_N, yerr=error[2], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
-    plt.ylabel("%", fontsize=15)
+    plt.ylabel(r"Occurence (norm.)", fontsize=15)
     #plt.ylim(0, 4)
     plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
 
@@ -1070,7 +1073,7 @@ def sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, error, T_Auro
     #plot(hours, T_disc_N, 'discrete', year, month=None, monthly=False)
     plt.plot(hours, T_disc_N, shape, label='discrete - '+year)
     plt.errorbar(hours, T_disc_N, yerr=error[3], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)    # elinewidth=0.1,
-    plt.ylabel("%", fontsize=15)
+    plt.ylabel(r"Occurence (norm.)", fontsize=15)
     #plt.ylim(0, 4)
     plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
 
@@ -1079,7 +1082,7 @@ def sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, error, T_Auro
     plt.plot(hours, T_c_N, shape, label='no aurora - '+year)
     plt.errorbar(hours, T_c_N, yerr=error[0], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
     #plt.xlabel("Hour of the day", fontsize=13)
-    plt.ylabel("%", fontsize=15)
+    plt.ylabel(r"Occurence (norm.)", fontsize=15)
     #plt.ylim(0, 4)
     plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
 
@@ -1089,7 +1092,7 @@ def sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, error, T_Auro
         plt.plot(hours, T_Aurora_N, shape, label='aurora - '+year)
         plt.errorbar(hours, T_Aurora_N, yerr=error[4], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
         plt.xlabel("Hour of the day", fontsize=15)
-        plt.ylabel("%", fontsize=15)
+        plt.ylabel(r"Occurence (norm.)", fontsize=15)
         #plt.ylim(0, 4.5)
         plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
     else:
@@ -1206,25 +1209,26 @@ def Hour_subplot(container, year, wl, month_name='Jan', N=4, month=False, weight
         tot_sum = sum(T_c+T_arc+T_diff+T_disc)
         tot_sum_a = sum(T_arc+T_diff+T_disc)
 
-        #print(tot_sum)
-        #print("aurora: ", tot_sum_a, "aurora-less: ", sum(T_c))
-
         use_tot_sum = True
         if use_tot_sum:
 
             for i in range(len(hours)):
+                # The sum of all four classes sums up to 1, or 100 %
                 T_c_N.append((T_c[i]/tot_sum)*100)
                 T_arc_N.append((T_arc[i]/tot_sum)*100)
                 T_diff_N.append((T_diff[i]/tot_sum)*100)
                 T_disc_N.append((T_disc[i]/tot_sum)*100)
+
                 T_Aurora_N.append((T_Aurora[i]/tot_sum)*100)
 
         else:
             for i in range(len(hours)):
+                # The sum of each individual class sums up to 1, or 100 %
                 T_c_N.append((T_c[i]/sum(T_c))*100)
                 T_arc_N.append((T_arc[i]/sum(T_arc))*100)
                 T_diff_N.append((T_diff[i]/sum(T_diff))*100)
                 T_disc_N.append((T_disc[i]/sum(T_disc))*100)
+
                 T_Aurora_N.append((T_Aurora[i]/tot_sum_a)*100)
 
         '''
@@ -1360,6 +1364,8 @@ if __name__ == "__main__":
         print('Red')
         #Bz_distribution_plots(path=r'stats/Red/b3/', wl=wl[0], Green=False)
 
+
+    #exit()
 
     # Check entries with equal label probability
     #weights_and_stuff(wl=wl[0][:4])

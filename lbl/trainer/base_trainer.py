@@ -148,6 +148,7 @@ class BaseTrainer:
         log.write("Batch size (train): {}\n".format(self.model_info[0]))
         log.write("Other model info: lr:{}, step:{}, gamma:{}\n".format(self.model_info[1], self.model_info[2], self.model_info[3]))
         log.write("V.acc all 200 epochs: {} pm {}\n\n".format(np.mean(v_acc), np.std(v_acc)))
+        log.write("Weighted accuracy: {}\n".format(best_acc_sk_w))
         log.write("recall: {}\n".format(best_recall))
         log.write("precision: {}\n".format(best_precission))
         log.write("f1 score (all classes): {}\n".format(best_f1))
