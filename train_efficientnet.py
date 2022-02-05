@@ -230,12 +230,13 @@ model = EfficientNet.from_name(model_name=MN, num_classes=4, in_channels=1)
 #train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=300, batch_size_train=24, learningRate=0.1, stepSize=50, g=0.5)
 #train(model, json_file, MN, mode='bilinear', w_sampler=True, ep=300, batch_size_train=24, learningRate=0.1, stepSize=50, g=0.5)
 
-train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=125, batch_size_train=24, learningRate=0.01, stepSize=75, g=0.1)
-train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=125, batch_size_train=24, learningRate=0.01, stepSize=50, g=0.1)
+MN = model_name[2]
+model = EfficientNet.from_name(model_name=MN, num_classes=4, in_channels=1)
 train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=125, batch_size_train=32, learningRate=0.01, stepSize=50, g=0.1)
 MN = model_name[4]
 model = EfficientNet.from_name(model_name=MN, num_classes=4, in_channels=1)
 train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=125, batch_size_train=24, learningRate=0.01, stepSize=50, g=0.1)
+
 exit()
 train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=150, batch_size_train=24, learningRate=0.01, stepSize=100, g=0.1)
 train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=150, batch_size_train=24, learningRate=0.01, stepSize=75, g=0.5)

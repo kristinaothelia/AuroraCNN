@@ -515,19 +515,48 @@ def neg_pos(list_, label):
     return neg_per, pos_per
 
 
+def error(entry, error_dict, error):
+
+    keys = []
+    for key, value in error_dict.items():
+        keys.append(key)
+
+    if str(math.trunc(float(entry.solarwind['Bz, nT (GSM)']))) not in keys:
+        pass
+    else:
+        old_score = error_dict[str(math.trunc(float(entry.solarwind['Bz, nT (GSM)'])))]  # key
+        new_score = error
+        edit = [old_score[0]+new_score, old_score[1]+1]
+        error_dict.update({str(math.trunc(float(entry.solarwind['Bz, nT (GSM)']))): edit})
+
 def omni_ting(container, year_='2014', year=False):
 
-    # List to add Bz value
+    # Lists to add Bz values
     a_less = []
     arc = []
     diff = []
     disc = []
 
+    # Dictionaries to add Bz error values
+    a_less_err = {}
+    arc_err = {}
+    diff_err = {}
+    disc_err = {}
+    init_vals = [0,0]
+
+    bins = np.linspace(-20, 20, 41)
+
+    for i in range(len(bins)):
+        a_less_err[str(int(bins[i]))] = init_vals
+        arc_err[str(int(bins[i]))] = init_vals
+        diff_err[str(int(bins[i]))] = init_vals
+        disc_err[str(int(bins[i]))] = init_vals
+
     count99 = 0
     count99_aless = 0
     input = 'Bz, nT (GSM)'
     input_err = 'Bz, nT (GSM), SD'
-    a_less_err = []
+    #a_less_err = []
 
     if year:
         for entry in container:
@@ -535,23 +564,30 @@ def omni_ting(container, year_='2014', year=False):
                 if entry.label == LABELS[0]:
                     if float(entry.solarwind[input]) != 9999.99:
                         a_less.append(float(entry.solarwind[input]))
-                        a_less_err.append(float(entry.solarwind[input_err]))
-
+                        err = float(entry.solarwind[input_err])
+                        error(entry, a_less_err, err)
+                        #a_less_err.append(float(entry.solarwind[input_err]))
                     else:
                         count99_aless += 1
                 elif entry.label == LABELS[1]:
                     if float(entry.solarwind[input]) != 9999.99:
                         arc.append(float(entry.solarwind[input]))
+                        err = float(entry.solarwind[input_err])
+                        error(entry, arc_err, err)
                     else:
                         count99 += 1
                 elif entry.label == LABELS[2]:
                     if float(entry.solarwind[input]) != 9999.99:
                         diff.append(float(entry.solarwind[input]))
+                        err = float(entry.solarwind[input_err])
+                        error(entry, diff_err, err)
                     else:
                         count99 += 1
                 elif entry.label == LABELS[3]:
                     if float(entry.solarwind[input]) != 9999.99:
                         disc.append(float(entry.solarwind[input]))
+                        err = float(entry.solarwind[input_err])
+                        error(entry, disc_err, err)
                     else:
                         count99 += 1
 
@@ -560,22 +596,29 @@ def omni_ting(container, year_='2014', year=False):
             if entry.label == LABELS[0]:
                 if float(entry.solarwind[input]) != 9999.99:
                     a_less.append(float(entry.solarwind[input]))
-                    a_less_err.append(float(entry.solarwind[input_err]))
+                    err = float(entry.solarwind[input_err])
+                    error(entry, a_less_err, err)
                 else:
                     count99_aless += 1
             elif entry.label == LABELS[1]:
                 if float(entry.solarwind[input]) != 9999.99:
                     arc.append(float(entry.solarwind[input]))
+                    err = float(entry.solarwind[input_err])
+                    error(entry, arc_err, err)
                 else:
                     count99 += 1
             elif entry.label == LABELS[2]:
                 if float(entry.solarwind[input]) != 9999.99:
                     diff.append(float(entry.solarwind[input]))
+                    err = float(entry.solarwind[input_err])
+                    error(entry, diff_err, err)
                 else:
                     count99 += 1
             elif entry.label == LABELS[3]:
                 if float(entry.solarwind[input]) != 9999.99:
                     disc.append(float(entry.solarwind[input]))
+                    err = float(entry.solarwind[input_err])
+                    error(entry, disc_err, err)
                 else:
                     count99 += 1
 
@@ -603,12 +646,12 @@ def omni_ting(container, year_='2014', year=False):
     print("Nr of entries (aurora) with 9999.99 value:    ", count99)
     print("Nr of entries (no aurora) with 9999.99 value: ", count99_aless)
 
+    return a_less, arc, diff, disc, neg, pos, a_less_err, arc_err, diff_err, disc_err
 
-    return a_less, arc, diff, disc, neg, pos
 
+def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, error_list, T_Aurora_N=None, month_name=None,  N=4):
 
-def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, month_name=None,  N=4):
-
+    # error_list = [a_less_errD, arc_errD, diff_errD, disc_errD, a_less_errN, arc_errN, diff_errN, disc_errN]
     bins = np.linspace(-20, 20, 41)
 
     if year[:4] == '2020':
@@ -632,8 +675,16 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, m
     #a_heights = a_heights / a_heights.sum()
     b_heights, b_bins = np.histogram(arc[1], bins=bins, density=True)
     #b_heights = b_heights / b_heights.sum()
-    plt.plot(a_bins[:-1], a_heights, 'o-', label=r'dayside')
-    plt.plot(b_bins[:-1], b_heights, '*-', label=r'nightside')
+    a_centers = 0.5*(a_bins[1:] + a_bins[:-1])
+    b_centers = 0.5*(b_bins[1:] + b_bins[:-1])
+    errD = error_list[1]
+    errD = errD[1:]
+    errN = error_list[5]
+    errN = errN[1:]
+    plt.plot(a_centers, a_heights, 'o-', label=r'dayside')
+    plt.errorbar(a_centers, a_heights, xerr=errD, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+    plt.plot(b_centers, b_heights, '*-', label=r'nightside')
+    plt.errorbar(b_centers, b_heights, xerr=errN, fmt='none', ecolor='C1', elinewidth=0.7, capsize=2)
     plt.text(-19, 0.26, r'$B_z < 0$:  {:.1f}%'.format(neg[0][1]), fontsize = 19, color='C0')
     plt.text(4, 0.26, r'$B_z >= 0$: {:.1f}%'.format(pos[0][1]), fontsize = 19, color='C0')
     plt.text(-19, 0.21, r'$B_z < 0$:  {:.1f}%'.format(neg[1][1]), fontsize = 19, color='C1')
@@ -657,12 +708,20 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, m
     plt.title(r'diffuse', fontsize = 22)
     a_heights, a_bins = np.histogram(diff[0], bins=bins, density=True)
     b_heights, b_bins = np.histogram(diff[1], bins=bins, density=True)
+    a_centers = 0.5*(a_bins[1:] + a_bins[:-1])
+    b_centers = 0.5*(b_bins[1:] + b_bins[:-1])
+    errD = error_list[2]
+    errD = errD[1:]
+    errN = error_list[6]
+    errN = errN[1:]
     plt.text(-19, 0.26, r'$B_z < 0$:  {:.1f}%'.format(neg[0][2]), fontsize = 19, color='C0')
     plt.text(4, 0.26, r'$B_z >= 0$: {:.1f}%'.format(pos[0][2]), fontsize = 19, color='C0')
     plt.text(-19, 0.21, r'$B_z < 0$:  {:.1f}%'.format(neg[1][2]), fontsize = 19, color='C1')
     plt.text(4, 0.21, r'$B_z >= 0$: {:.1f}%'.format(pos[1][2]), fontsize = 19, color='C1')
-    plt.plot(a_bins[:-1], a_heights, 'o-', label=r'dayside')
-    plt.plot(b_bins[:-1], b_heights, '*-', label=r'nightside')
+    plt.plot(a_centers, a_heights, 'o-', label=r'dayside')
+    plt.errorbar(a_centers, a_heights, xerr=errD, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+    plt.plot(b_centers, b_heights, '*-', label=r'nightside')
+    plt.errorbar(b_centers, b_heights, xerr=errN, fmt='none', ecolor='C1', elinewidth=0.7, capsize=2)
     plt.axvline(x=0, ls='--', color='lightgrey')
     #plot(hours, T_diff_N, 'diffuse', year, month=None, monthly=False)
     #plt.plot(hours, T_diff_N, shape, label='diffuse - '+year)
@@ -678,12 +737,20 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, m
     plt.title(r'discrete', fontsize = 22)
     a_heights, a_bins = np.histogram(disc[0], bins=bins, density=True)
     b_heights, b_bins = np.histogram(disc[1], bins=bins, density=True)
+    a_centers = 0.5*(a_bins[1:] + a_bins[:-1])
+    b_centers = 0.5*(b_bins[1:] + b_bins[:-1])
+    errD = error_list[3]
+    errD = errD[1:]
+    errN = error_list[7]
+    errN = errN[1:]
     plt.text(-19, 0.26, r'$B_z < 0$:  {:.1f}%'.format(neg[0][3]), fontsize = 19, color='C0')
     plt.text(4, 0.26, r'$B_z >= 0$: {:.1f}%'.format(pos[0][3]), fontsize = 19, color='C0')
     plt.text(-19, 0.21, r'$B_z < 0$:  {:.1f}%'.format(neg[1][3]), fontsize = 19, color='C1')
     plt.text(4, 0.21, r'$B_z >= 0$: {:.1f}%'.format(pos[1][3]), fontsize = 19, color='C1')
-    plt.plot(a_bins[:-1], a_heights, 'o-', label=r'dayside')
-    plt.plot(b_bins[:-1], b_heights, '*-', label=r'nightside')
+    plt.plot(a_centers, a_heights, 'o-', label=r'dayside')
+    plt.errorbar(a_centers, a_heights, xerr=errD, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+    plt.plot(b_centers, b_heights, '*-', label=r'nightside')
+    plt.errorbar(b_centers, b_heights, xerr=errN, fmt='none', ecolor='C1', elinewidth=0.7, capsize=2)
     plt.axvline(x=0, ls='--', color='lightgrey')
     #plot(hours, T_disc_N, 'discrete', year, month=None, monthly=False)
     #plt.plot(hours, T_disc_N, shape, label='discrete - '+year)
@@ -700,12 +767,20 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, T_Aurora_N=None, m
     plt.title(r'no aurora', fontsize = 22)   # 15
     a_heights, a_bins = np.histogram(a_less[0], bins=bins, density=True)
     b_heights, b_bins = np.histogram(a_less[1], bins=bins, density=True)
+    a_centers = 0.5*(a_bins[1:] + a_bins[:-1])
+    b_centers = 0.5*(b_bins[1:] + b_bins[:-1])
+    errD = error_list[0]
+    errD = errD[1:]
+    errN = error_list[4]
+    errN = errN[1:]
     plt.text(-19, 0.26, r'$B_z < 0$:  {:.1f}%'.format(neg[0][0]), fontsize = 19, color='C0')    # 13
     plt.text(4, 0.26, r'$B_z >= 0$: {:.1f}%'.format(pos[0][0]), fontsize = 19, color='C0')
     plt.text(-19, 0.21, r'$B_z < 0$:  {:.1f}%'.format(neg[1][0]), fontsize = 19, color='C1')
     plt.text(4, 0.21, r'$B_z >= 0$: {:.1f}%'.format(pos[1][0]), fontsize = 19, color='C1')
-    plt.plot(a_bins[:-1], a_heights, 'o-', label='dayside')
-    plt.plot(b_bins[:-1], b_heights, '*-', label='nightside')
+    plt.plot(a_centers, a_heights, 'o-', label='dayside')
+    plt.errorbar(a_centers, a_heights, xerr=errD, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+    plt.plot(b_centers, b_heights, '*-', label=r'nightside')
+    plt.errorbar(b_centers, b_heights, xerr=errN, fmt='none', ecolor='C1', elinewidth=0.7, capsize=2)
     plt.axvline(x=0, ls='--', color='lightgrey')
     #plot(hours, T_c_N, 'no aurora', year, month=None, monthly=False, axis=True)
     #plt.plot(hours, T_c_N, shape, label='no aurora - '+year)
@@ -727,11 +802,31 @@ def Bz_stats(container_D, container_N, year, wl):
     plt.figure(figsize=(18, 9)) # bredde, hoyde. 11, 8
 
     if year == '2014-2020':
-        a_less_Day, arc_Day, diff_Day, disc_Day, neg_Day, pos_Day = omni_ting(container_D)
-        a_less_Night, arc_Night, diff_Night, disc_Night, neg_Night, pos_Night = omni_ting(container_N)
+        a_less_Day, arc_Day, diff_Day, disc_Day, neg_Day, pos_Day, \
+        a_less_errD, arc_errD, diff_errD, disc_errD = omni_ting(container_D)
+        a_less_Night, arc_Night, diff_Night, disc_Night, neg_Night, pos_Night, \
+        a_less_errN, arc_errN, diff_errN, disc_errN = omni_ting(container_N)
     else:
-        a_less_Day, arc_Day, diff_Day, disc_Day, neg_Day, pos_Day = omni_ting(container_D, year, True)
-        a_less_Night, arc_Night, diff_Night, disc_Night, neg_Night, pos_Night = omni_ting(container_N, year, True)
+        a_less_Day, arc_Day, diff_Day, disc_Day, neg_Day, pos_Day, \
+        a_less_errD, arc_errD, diff_errD, disc_errD = omni_ting(container_D, year, True)
+        a_less_Night, arc_Night, diff_Night, disc_Night, neg_Night, pos_Night, \
+        a_less_errN, arc_errN, diff_errN, disc_errN = omni_ting(container_N, year, True)
+
+
+    list = [a_less_errD, arc_errD, diff_errD, disc_errD, a_less_errN, arc_errN, diff_errN, disc_errN]
+    list_arrays = []
+
+    for i in range(len(list)):
+        error_std = []
+        for key, value in list[i].items():
+
+            if value[1] == 0:
+                error_std.append(0)
+            else:
+                error_std.append(value[0]/value[1])
+
+        error_hist = np.array(error_std)
+        list_arrays.append(error_hist)
 
     a_less = [a_less_Day, a_less_Night]
     arc = [arc_Day, arc_Night]
@@ -740,7 +835,7 @@ def Bz_stats(container_D, container_N, year, wl):
     neg = [neg_Day, neg_Night]
     pos = [pos_Day, pos_Night]
 
-    sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos)
+    sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, list_arrays)
 
 
 
@@ -1288,8 +1383,8 @@ if __name__ == "__main__":
 
         # All 4 years, jan+nov+dec
         predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3.json'
-        container_Full = DatasetContainer.from_json(predicted_G_Full)
-        print("len container Full: ", len(container_Full))
+        #container_Full = DatasetContainer.from_json(predicted_G_Full)
+        #print("len container Full: ", len(container_Full))
         wl = [r'5577 Å', r'5577 Å', r'5577 Å', r'5577 Å']
 
     else:
@@ -1355,17 +1450,21 @@ if __name__ == "__main__":
 
         for i in range(len(years)):
             Bz_stats(container_D, container_N, years[i], wl)
-            plt.savefig(path+r'yearly_Bz_plot_{}_small.png'.format(years[i]), bbox_inches="tight")
+            if Green:
+                plt.savefig(path+r'yearly_Bz_plot_{}_small.png'.format(years[i]), bbox_inches="tight")
+            else:
+                plt.savefig(path+r'yearly_Bz_plot_{}_small_R.png'.format(years[i]), bbox_inches="tight")
+            #plt.show()
 
     if Green:
         print('Green')
-        #Bz_distribution_plots(path=r'stats/Green/b3/', wl=wl[0])
+        Bz_distribution_plots(path=r'stats/Green/b3/', wl=wl[0])
     else:
         print('Red')
-        #Bz_distribution_plots(path=r'stats/Red/b3/', wl=wl[0], Green=False)
+        Bz_distribution_plots(path=r'stats/Red/b3/', wl=wl[0], Green=False)
 
 
-    #exit()
+    exit()
 
     # Check entries with equal label probability
     #weights_and_stuff(wl=wl[0][:4])

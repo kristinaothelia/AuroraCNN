@@ -325,16 +325,50 @@ def Hour_subplot(container, year, wl, month_name='Jan', N=4, month=False, weight
 
 #----------------------------------------------------------------------------
 
-def aurora_Speed_stats(container, year_='2014', year=False):
+def error(entry, error_dict, error):
+
+    keys = []
+    for key, value in error_dict.items():
+        keys.append(key)
+
+    if str(math.trunc(float(entry.solarwind['Speed, km/s']))) not in keys:
+        pass
+    else:
+        old_score = error_dict[str(math.trunc(float(entry.solarwind['Speed, km/s'])))]  # key
+        new_score = error
+        edit = [old_score[0]+new_score, old_score[1]+1]
+        error_dict.update({str(math.trunc(float(entry.solarwind['Speed, km/s']))): edit})
+
+
+def aurora_Speed_stats(container, bins, year_='2014', year=False):
 
     input = 'Speed, km/s'
-    # List to add Spped value
+    input_err = 'Speed, km/s, SD'
+
+    # Lists to add Speed values
     a_less = []
     arc = []
     diff = []
     disc = []
     all = []
     aurora = []
+
+    # Dictionaries to add Speed error values
+    a_less_err = {}
+    arc_err = {}
+    diff_err = {}
+    disc_err = {}
+    all_err = {}
+    aurora_err = {}
+    init_vals = [0,0]
+
+    for i in range(len(bins)):
+        a_less_err[str(int(bins[i]))] = init_vals
+        arc_err[str(int(bins[i]))] = init_vals
+        diff_err[str(int(bins[i]))] = init_vals
+        disc_err[str(int(bins[i]))] = init_vals
+        all_err[str(int(bins[i]))] = init_vals
+        aurora_err[str(int(bins[i]))] = init_vals
 
     count99 = 0
     count99_aless = 0
@@ -346,6 +380,9 @@ def aurora_Speed_stats(container, year_='2014', year=False):
                     if float(entry.solarwind[input]) != 99999.9:
                         a_less.append(float(entry.solarwind[input]))
                         all.append(float(entry.solarwind[input]))
+                        err = float(entry.solarwind[input_err])
+                        error(entry, a_less_err, err)
+                        error(entry, all_err, err)
                         #a_less_err.append(float(entry.solarwind[input_err]))
                     else:
                         count99_aless += 1
@@ -354,6 +391,10 @@ def aurora_Speed_stats(container, year_='2014', year=False):
                         arc.append(float(entry.solarwind[input]))
                         all.append(float(entry.solarwind[input]))
                         aurora.append(float(entry.solarwind[input]))
+                        err = float(entry.solarwind[input_err])
+                        error(entry, arc_err, err)
+                        error(entry, all_err, err)
+                        error(entry, aurora_err, err)
                     else:
                         count99 += 1
                 elif entry.label == LABELS[2]:
@@ -361,6 +402,10 @@ def aurora_Speed_stats(container, year_='2014', year=False):
                         diff.append(float(entry.solarwind[input]))
                         all.append(float(entry.solarwind[input]))
                         aurora.append(float(entry.solarwind[input]))
+                        err = float(entry.solarwind[input_err])
+                        error(entry, diff_err, err)
+                        error(entry, all_err, err)
+                        error(entry, aurora_err, err)
                     else:
                         count99 += 1
                 elif entry.label == LABELS[3]:
@@ -368,6 +413,10 @@ def aurora_Speed_stats(container, year_='2014', year=False):
                         disc.append(float(entry.solarwind[input]))
                         all.append(float(entry.solarwind[input]))
                         aurora.append(float(entry.solarwind[input]))
+                        err = float(entry.solarwind[input_err])
+                        error(entry, disc_err, err)
+                        error(entry, all_err, err)
+                        error(entry, aurora_err, err)
                     else:
                         count99 += 1
 
@@ -377,6 +426,9 @@ def aurora_Speed_stats(container, year_='2014', year=False):
                 if float(entry.solarwind[input]) != 99999.9:
                     a_less.append(float(entry.solarwind[input]))
                     all.append(float(entry.solarwind[input]))
+                    err = float(entry.solarwind[input_err])
+                    error(entry, a_less_err, err)
+                    error(entry, all_err, err)
                     #a_less_err.append(float(entry.solarwind[input_err]))
                 else:
                     count99_aless += 1
@@ -385,6 +437,10 @@ def aurora_Speed_stats(container, year_='2014', year=False):
                     arc.append(float(entry.solarwind[input]))
                     all.append(float(entry.solarwind[input]))
                     aurora.append(float(entry.solarwind[input]))
+                    err = float(entry.solarwind[input_err])
+                    error(entry, arc_err, err)
+                    error(entry, all_err, err)
+                    error(entry, aurora_err, err)
                 else:
                     count99 += 1
             elif entry.label == LABELS[2]:
@@ -392,6 +448,10 @@ def aurora_Speed_stats(container, year_='2014', year=False):
                     diff.append(float(entry.solarwind[input]))
                     all.append(float(entry.solarwind[input]))
                     aurora.append(float(entry.solarwind[input]))
+                    err = float(entry.solarwind[input_err])
+                    error(entry, diff_err, err)
+                    error(entry, all_err, err)
+                    error(entry, aurora_err, err)
                 else:
                     count99 += 1
             elif entry.label == LABELS[3]:
@@ -399,15 +459,19 @@ def aurora_Speed_stats(container, year_='2014', year=False):
                     disc.append(float(entry.solarwind[input]))
                     all.append(float(entry.solarwind[input]))
                     aurora.append(float(entry.solarwind[input]))
+                    err = float(entry.solarwind[input_err])
+                    error(entry, disc_err, err)
+                    error(entry, all_err, err)
+                    error(entry, aurora_err, err)
                 else:
                     count99 += 1
 
     print("Nr of entries (aurora) with 99999.9 value:    ", count99)
     print("Nr of entries (no aurora) with 99999.9 value: ", count99_aless)
 
-    return a_less, arc, diff, disc, all, aurora
+    return a_less, arc, diff, disc, all, aurora, a_less_err, arc_err, diff_err, disc_err, all_err, aurora_err
 
-def sub_plots_Speed(year, wl, a_less, arc, diff, disc, bins, bins_width, T_Aurora_N=None, month_name=None,  N=4):
+def sub_plots_Speed(year, wl, a_less, arc, diff, disc, bins, bins_width, error_list, T_Aurora_N=None, month_name=None,  N=4):
 
     if year[:4] == '2020':
         shape = 'C3*-'
@@ -425,7 +489,12 @@ def sub_plots_Speed(year, wl, a_less, arc, diff, disc, bins, bins_width, T_Auror
     plt.title(r'arc', fontsize = 22)
     heights, bins = np.histogram(arc, bins=bins, density=True)
     heights = heights / heights.sum()
-    plt.plot(bins[:-1], heights, shape, label=year)
+    centers = 0.5*(bins[1:] + bins[:-1])
+    err = error_list[1]
+    err = err[1:]
+    #plt.plot(bins[:-1], heights, shape, label=year)
+    plt.plot(centers, heights, shape, label=year)
+    plt.errorbar(centers, heights, xerr=err, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
     plt.ylabel(r"Occurence (norm.)", fontsize=22)
     plt.ylim(-0.01, 0.265)
     plt.xticks(fontsize=19)
@@ -440,7 +509,13 @@ def sub_plots_Speed(year, wl, a_less, arc, diff, disc, bins, bins_width, T_Auror
     plt.title(r'diffuse', fontsize = 22)
     heights, bins = np.histogram(diff, bins=bins, density=True)
     heights = heights / heights.sum()
-    plt.plot(bins[:-1], heights, shape, label="Diffuse")
+    centers = 0.5*(bins[1:] + bins[:-1])
+    err = error_list[2]
+    err = err[1:]
+    #plt.plot(bins[:-1], heights, shape, label=year)
+    plt.plot(centers, heights, shape, label=year)
+    plt.errorbar(centers, heights, xerr=err, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+    #plt.plot(bins[:-1], heights, shape, label="Diffuse")
     #plt.ylabel(r"Occurence (norm.)", fontsize=22)    # 15
     plt.ylim(-0.01, 0.265)
     plt.xticks(fontsize=19)
@@ -453,7 +528,13 @@ def sub_plots_Speed(year, wl, a_less, arc, diff, disc, bins, bins_width, T_Auror
     plt.title(r'discrete', fontsize = 22)
     heights, bins = np.histogram(disc, bins=bins, density=True)
     heights = heights / heights.sum()
-    plt.plot(bins[:-1], heights, shape, label="Diffuse")
+    centers = 0.5*(bins[1:] + bins[:-1])
+    err = error_list[3]
+    err = err[1:]
+    #plt.plot(bins[:-1], heights, shape, label=year)
+    plt.plot(centers, heights, shape, label=year)
+    plt.errorbar(centers, heights, xerr=err, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+    #plt.plot(bins[:-1], heights, shape, label="Diffuse")
     plt.ylabel(r"Occurence (norm.)", fontsize=22)    # 15
     plt.ylim(-0.01, 0.265)
     plt.xticks(fontsize=19)
@@ -467,7 +548,13 @@ def sub_plots_Speed(year, wl, a_less, arc, diff, disc, bins, bins_width, T_Auror
     plt.title(r'no aurora', fontsize = 22)   # 15
     heights, bins = np.histogram(a_less, bins=bins, density=True)
     heights = heights / heights.sum()
-    plt.plot(bins[:-1], heights, shape, label="Diffuse")
+    centers = 0.5*(bins[1:] + bins[:-1])
+    err = error_list[0]
+    err = err[1:]
+    #plt.plot(bins[:-1], heights, shape, label=year)
+    plt.plot(centers, heights, shape, label=year)
+    plt.errorbar(centers, heights, xerr=err, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+    #plt.plot(bins[:-1], heights, shape, label="Diffuse")
     #plt.ylabel(r"Occurence (norm.)", fontsize=22)    # 15
     plt.ylim(-0.01, 0.265)
     plt.xticks(fontsize=19)
@@ -478,19 +565,24 @@ def sub_plots_Speed(year, wl, a_less, arc, diff, disc, bins, bins_width, T_Auror
 
     plt.subplots_adjust(top=0.83)
 
-#def Speed_stats(container_D, container_N, year, wl):
+
 def Speed_stats(container, year, wl, year_plot=False, subplot=False):
     print('Speed stats')
     print(year)
 
+    #bins = np.linspace(200, 800, 21)   # 30 km/s intervals
+    #bins = np.linspace(200, 800, 13)    # 50 km/s intervals
+    bins = np.linspace(200, 800, 31)    # 20 km/s intervals
+    bins_width = bins[1]-bins[0]
+
     #plt.figure(figsize=(18, 9)) # bredde, hoyde. 11, 8
 
     if year == '2014-2020':
-        a_less, arc, diff, disc, all, aurora = aurora_Speed_stats(container)
+        a_less, arc, diff, disc, all, aurora, a_less_err, arc_err, diff_err, disc_err, all_err, aurora_err = aurora_Speed_stats(container, bins)
         #a_less_Day, arc_Day, diff_Day, disc_Day = aurora_Bz_stats(container_D)
         #a_less_Night, arc_Night, diff_Night, disc_Night = aurora_Bz_stats(container_N)
     else:
-        a_less, arc, diff, disc, all, aurora = aurora_Speed_stats(container, year, True)
+        a_less, arc, diff, disc, all, aurora, a_less_err, arc_err, diff_err, disc_err, all_err, aurora_err = aurora_Speed_stats(container, bins, year, True)
         #a_less_Day, arc_Day, diff_Day, disc_Day = aurora_Bz_stats(container_D, year, True)
         #a_less_Night, arc_Night, diff_Night, disc_Night = aurora_Bz_stats(container_N, year, True)
 
@@ -499,6 +591,21 @@ def Speed_stats(container, year, wl, year_plot=False, subplot=False):
     #diff = [diff_Day, diff_Night]
     #disc = [disc_Day, disc_Night]
 
+    list = [a_less_err, arc_err, diff_err, disc_err, all_err, aurora_err]
+    list_arrays = []
+
+    for i in range(len(list)):
+        error_std = []
+        for key, value in list[i].items():
+
+            if value[1] == 0:
+                error_std.append(0)
+            else:
+                error_std.append(value[0]/value[1])
+
+        error_hist = np.array(error_std)
+        list_arrays.append(error_hist)
+    #print(list_arrays)
 
     if year == '2020':
         shape = '*-'
@@ -511,17 +618,17 @@ def Speed_stats(container, year, wl, year_plot=False, subplot=False):
     else:
         shape = 'k--'
 
-    #bins = np.linspace(200, 800, 21)   # 30 km/s intervals
-    #bins = np.linspace(200, 800, 13)    # 50 km/s intervals
-    bins = np.linspace(200, 800, 31)    # 20 km/s intervals
-    bins_width = bins[1]-bins[0]
-
     if year_plot:
 
-        plt.title(r'SW speed distribution for all classes [{}]'.format(wl) +'\n'+ r'Bins = {} km/s'.format(bins_width), fontsize=16)
+        plt.title(r'Solar wind speed distribution [{}]'.format(wl) +'\n'+ r'Bins = {} km/s'.format(bins_width), fontsize=16)
         heights, bins = np.histogram(all, bins=bins, density=True) #, density=True
         unity_density = heights / heights.sum()
-        plt.plot(bins[:-1], unity_density, shape, label=year)
+        centers = 0.5*(bins[1:] + bins[:-1])
+        #plt.plot(bins[:-1], unity_density, shape, label=year)
+        err = list_arrays[4]
+        err = err[1:]
+        plt.plot(centers, unity_density, shape, label=year)
+        plt.errorbar(centers, unity_density, xerr=err, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
         plt.legend(fontsize=13)
         plt.xlabel(r"Solar wind speed [km/s]", fontsize=14)
         plt.ylabel(r"Occurence (norm.)", fontsize=14)    # 15
@@ -529,7 +636,7 @@ def Speed_stats(container, year, wl, year_plot=False, subplot=False):
         print(unity_density.sum())
 
     elif subplot:
-        sub_plots_Speed(year, wl, a_less, arc, diff, disc, bins, bins_width)
+        sub_plots_Speed(year, wl, a_less, arc, diff, disc, bins, bins_width, list_arrays)
 
     else:
 
@@ -537,21 +644,41 @@ def Speed_stats(container, year, wl, year_plot=False, subplot=False):
 
         plt.title(r'SW speed distribution for {} [{}]'.format(year, wl) +'\n'+ r'Bins = {} km/s'.format(bins_width), fontsize=16)
 
-        heights, bins = np.histogram(a_less, bins=bins, density=True) #, density=True
-        heights = heights / heights.sum()
-        plt.plot(bins[:-1], heights, 'x-', label="No aurora, clouds")
-
         heights, bins = np.histogram(arc, bins=bins, density=True)
         heights = heights / heights.sum()
-        plt.plot(bins[:-1], heights, 'o-', label="Arc")
+        centers = 0.5*(bins[1:] + bins[:-1])
+        err = list_arrays[1]
+        err = err[1:]
+        plt.plot(centers, heights, 'o-', label="arc")
+        plt.errorbar(centers, heights, xerr=err, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+        #plt.plot(bins[:-1], heights, 'o-', label="Arc")
 
         heights, bins = np.histogram(diff, bins=bins, density=True)
         heights = heights / heights.sum()
-        plt.plot(bins[:-1], heights, '*-', label="Diffuse")
+        centers = 0.5*(bins[1:] + bins[:-1])
+        err = list_arrays[2]
+        err = err[1:]
+        plt.plot(centers, heights, '*-', label="diffuse")
+        plt.errorbar(centers, heights, xerr=err, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+        #plt.plot(bins[:-1], heights, '*-', label="Diffuse")
 
         heights, bins = np.histogram(disc, bins=bins, density=True)
         heights = heights / heights.sum()
-        plt.plot(bins[:-1], heights, '.-', label="Discrete")
+        centers = 0.5*(bins[1:] + bins[:-1])
+        err = list_arrays[3]
+        err = err[1:]
+        plt.plot(centers, heights, '.-', label="discrete")
+        plt.errorbar(centers, heights, xerr=err, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+        #plt.plot(bins[:-1], heights, '.-', label="Discrete")
+
+        heights, bins = np.histogram(a_less, bins=bins, density=True) #, density=True
+        heights = heights / heights.sum()
+        centers = 0.5*(bins[1:] + bins[:-1])
+        err = list_arrays[0]
+        err = err[1:]
+        plt.plot(centers, heights, 'x-', label="no aurora")
+        plt.errorbar(centers, heights, xerr=err, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+        #plt.plot(bins[:-1], heights, 'x-', label="No aurora")
 
         plt.legend(fontsize=13)
         plt.xlabel(r"Solar wind speed [km/s]", fontsize=14)
@@ -610,21 +737,8 @@ if __name__ == "__main__":
         years = [r'2014', r'2016', r'2018', r'2020', r'2014-2020']
         if years:
             years = [r'2014', r'2016', r'2018', r'2020']
+            #years = [r'2014', r'2016', r'2020']
         path_ASI = r'C:\Users\Krist\Documents\ASI_json_files'
-
-        """
-        if Green:
-            D = r'\AuroraFull_G_omni_mean_predicted_efficientnet-b3_daytime.json'
-            N = r'\AuroraFull_G_omni_mean_predicted_efficientnet-b3_nighttime.json'
-        else:
-            D = r'\AuroraFull_R_omni_mean_predicted_efficientnet-b3_daytime.json'
-            N = r'\AuroraFull_R_omni_mean_predicted_efficientnet-b3_nighttime.json'
-
-        container_D = DatasetContainer.from_json(path_ASI+D)
-        container_N = DatasetContainer.from_json(path_ASI+N)
-        print('len container day:   ', len(container_D))
-        print('len container night: ', len(container_N))
-        """
 
         if years_plot:
 
@@ -645,8 +759,10 @@ if __name__ == "__main__":
                 Speed_stats(container_Full, years[i], wl, subplot=True)
             if Green:
                 plt.savefig(path+r'Density_speed_subplot.png', bbox_inches="tight")
+                #plt.savefig(path+r'Density_speed_subplot_141620.png', bbox_inches="tight")
             else:
                 plt.savefig(path+r'Density_speed_subplot_R.png', bbox_inches="tight")
+                #plt.savefig(path+r'Density_speed_subplot_141620_R.png', bbox_inches="tight")
 
         else:
             for i in range(len(years)):
@@ -663,11 +779,11 @@ if __name__ == "__main__":
 
     if Green:
         print('Green')
-        #Speed_distribution_plots(path=r'stats/Green/b3/Speed/', wl=wl[0], years_plot=True)
-        #Speed_distribution_plots(path=r'stats/Green/b3/Speed/', wl=wl[0])
-        Speed_distribution_plots(path=r'stats/Green/b3/Speed/', wl=wl[0], subplot=True)
+        Speed_distribution_plots(path=r'stats/Green/b3/Speed/', wl=wl[0], years_plot=True)
+        Speed_distribution_plots(path=r'stats/Green/b3/Speed/', wl=wl[0])
+        #Speed_distribution_plots(path=r'stats/Green/b3/Speed/', wl=wl[0], subplot=True)
     else:
         print('Red')
-        #Speed_distribution_plots(path=r'stats/Red/b3/Speed/', wl=wl[0], Green=False, years_plot=True)
-        #Speed_distribution_plots(path=r'stats/Red/b3/Speed/', wl=wl[0], Green=False)
-        Speed_distribution_plots(path=r'stats/Red/b3/Speed/', wl=wl[0], Green=False, subplot=True)
+        Speed_distribution_plots(path=r'stats/Red/b3/Speed/', wl=wl[0], Green=False, years_plot=True)
+        Speed_distribution_plots(path=r'stats/Red/b3/Speed/', wl=wl[0], Green=False)
+        #Speed_distribution_plots(path=r'stats/Red/b3/Speed/', wl=wl[0], Green=False, subplot=True)
