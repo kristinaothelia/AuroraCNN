@@ -535,7 +535,7 @@ def sub_plots_Speed(year, wl, a_less, arc, diff, disc, bins, bins_width, error_l
     plt.plot(centers, heights, shape, label=year)
     plt.errorbar(centers, heights, xerr=err, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
     #plt.plot(bins[:-1], heights, shape, label="Diffuse")
-    plt.ylabel(r"Occurence (norm.)", fontsize=22)    # 15
+    plt.ylabel(r"Occurrence (norm.)", fontsize=22)    # 15
     plt.ylim(-0.01, 0.265)
     plt.xticks(fontsize=19)
     plt.yticks(fontsize=19) # 11
@@ -623,6 +623,7 @@ def Speed_stats(container, year, wl, year_plot=False, subplot=False):
         plt.title(r'Solar wind speed distribution [{}]'.format(wl) +'\n'+ r'Bins = {} km/s'.format(bins_width), fontsize=16)
         heights, bins = np.histogram(all, bins=bins, density=True) #, density=True
         unity_density = heights / heights.sum()
+        #unity_density = heights
         centers = 0.5*(bins[1:] + bins[:-1])
         #plt.plot(bins[:-1], unity_density, shape, label=year)
         err = list_arrays[4]
@@ -631,7 +632,7 @@ def Speed_stats(container, year, wl, year_plot=False, subplot=False):
         plt.errorbar(centers, unity_density, xerr=err, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
         plt.legend(fontsize=13)
         plt.xlabel(r"Solar wind speed [km/s]", fontsize=14)
-        plt.ylabel(r"Occurence (norm.)", fontsize=14)    # 15
+        plt.ylabel(r"Occurrence (norm.)", fontsize=14)    # 15
         plt.tight_layout()
         print(unity_density.sum())
 
@@ -682,7 +683,7 @@ def Speed_stats(container, year, wl, year_plot=False, subplot=False):
 
         plt.legend(fontsize=13)
         plt.xlabel(r"Solar wind speed [km/s]", fontsize=14)
-        plt.ylabel(r"Occurence (norm.)", fontsize=14)    # 15
+        plt.ylabel(r"Occurrence (norm.)", fontsize=14)    # 15
         #plt.ylim(-0.01, 0.30)
 
         plt.tight_layout()
@@ -693,7 +694,7 @@ if __name__ == "__main__":
 
     LABELS = ['aurora-less', 'arc', 'diffuse', 'discrete']
 
-    Green = False
+    Green = True
     if Green:
 
         # All 4 years, jan+nov+dec
@@ -748,9 +749,9 @@ if __name__ == "__main__":
                 #Speed_stats(container_D, container_N, years[i], wl)
                 #plt.savefig(path+r'Speed_plot_{}.png'.format(years[i]), bbox_inches="tight")
             if Green:
-                plt.savefig(path+r'Density_speed_year_plot.png', bbox_inches="tight")
+                plt.savefig(path+r'SW_speed_year_plot.png', bbox_inches="tight")
             else:
-                plt.savefig(path+r'Density_speed_year_plot_R.png', bbox_inches="tight")
+                plt.savefig(path+r'SW_speed_year_plot_R.png', bbox_inches="tight")
 
         elif subplot:
             plt.figure(figsize=(16, 13)) # bredde, hoyde. 11, 8
@@ -758,10 +759,10 @@ if __name__ == "__main__":
             for i in range(len(years)):
                 Speed_stats(container_Full, years[i], wl, subplot=True)
             if Green:
-                plt.savefig(path+r'Density_speed_subplot.png', bbox_inches="tight")
+                plt.savefig(path+r'SW_speed_subplot.png', bbox_inches="tight")
                 #plt.savefig(path+r'Density_speed_subplot_141620.png', bbox_inches="tight")
             else:
-                plt.savefig(path+r'Density_speed_subplot_R.png', bbox_inches="tight")
+                plt.savefig(path+r'SW_speed_subplot_R.png', bbox_inches="tight")
                 #plt.savefig(path+r'Density_speed_subplot_141620_R.png', bbox_inches="tight")
 
         else:
@@ -770,9 +771,9 @@ if __name__ == "__main__":
                 #Speed_stats(container_D, container_N, years[i], wl)
                 #plt.savefig(path+r'Speed_plot_{}.png'.format(years[i]), bbox_inches="tight")
                 if Green:
-                    plt.savefig(path+r'Density_speed_plot_{}.png'.format(years[i]), bbox_inches="tight")
+                    plt.savefig(path+r'SW_speed_plot_{}.png'.format(years[i]), bbox_inches="tight")
                 else:
-                    plt.savefig(path+r'Density_speed_plot_{}_R.png'.format(years[i]), bbox_inches="tight")
+                    plt.savefig(path+r'SW_speed_plot_{}_R.png'.format(years[i]), bbox_inches="tight")
                 #plt.show()
 
 
@@ -781,9 +782,9 @@ if __name__ == "__main__":
         print('Green')
         Speed_distribution_plots(path=r'stats/Green/b3/Speed/', wl=wl[0], years_plot=True)
         Speed_distribution_plots(path=r'stats/Green/b3/Speed/', wl=wl[0])
-        #Speed_distribution_plots(path=r'stats/Green/b3/Speed/', wl=wl[0], subplot=True)
+        Speed_distribution_plots(path=r'stats/Green/b3/Speed/', wl=wl[0], subplot=True)
     else:
         print('Red')
         Speed_distribution_plots(path=r'stats/Red/b3/Speed/', wl=wl[0], Green=False, years_plot=True)
         Speed_distribution_plots(path=r'stats/Red/b3/Speed/', wl=wl[0], Green=False)
-        #Speed_distribution_plots(path=r'stats/Red/b3/Speed/', wl=wl[0], Green=False, subplot=True)
+        Speed_distribution_plots(path=r'stats/Red/b3/Speed/', wl=wl[0], Green=False, subplot=True)

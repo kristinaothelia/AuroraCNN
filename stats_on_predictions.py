@@ -694,7 +694,7 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, error_list, T_Auro
     #plt.text(-19, 0.13, 'Max: {:.1f}, Min: {:.1f}'.format(np.max(pos[1][1]), np.min(neg[1][1])), fontsize = 17, color='C1')
     plt.axvline(x=0, ls='--', color='lightgrey')
     #plt.plot(hours, T_arc_N, shape, label='arc - '+year)
-    plt.ylabel(r"Occurence (norm.)", fontsize=22)    # 15
+    plt.ylabel(r"Occurrence (norm.)", fontsize=22)    # 15
     plt.ylim(-0.01, 0.30)
     plt.xticks(fontsize=19)
     plt.yticks(fontsize=19) # 11
@@ -725,7 +725,7 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, error_list, T_Auro
     plt.axvline(x=0, ls='--', color='lightgrey')
     #plot(hours, T_diff_N, 'diffuse', year, month=None, monthly=False)
     #plt.plot(hours, T_diff_N, shape, label='diffuse - '+year)
-    plt.ylabel(r"Occurence (norm.)", fontsize=22)    # 15
+    plt.ylabel(r"Occurrence (norm.)", fontsize=22)    # 15
     plt.ylim(-0.01, 0.30)
     plt.xticks(fontsize=19)
     plt.yticks(fontsize=19) # 11
@@ -754,7 +754,7 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, error_list, T_Auro
     plt.axvline(x=0, ls='--', color='lightgrey')
     #plot(hours, T_disc_N, 'discrete', year, month=None, monthly=False)
     #plt.plot(hours, T_disc_N, shape, label='discrete - '+year)
-    plt.ylabel(r"Occurence (norm.)", fontsize=22)    # 15
+    plt.ylabel(r"Occurrence (norm.)", fontsize=22)    # 15
     plt.ylim(-0.01, 0.30)
     plt.xticks(fontsize=19)
     plt.yticks(fontsize=19) # 11
@@ -785,7 +785,7 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, error_list, T_Auro
     #plot(hours, T_c_N, 'no aurora', year, month=None, monthly=False, axis=True)
     #plt.plot(hours, T_c_N, shape, label='no aurora - '+year)
     #plt.xlabel("Hour of the day", fontsize=13)
-    plt.ylabel(r"Occurence (norm.)", fontsize=22)    # 15
+    plt.ylabel(r"Occurrence (norm.)", fontsize=22)    # 15
     plt.ylim(-0.01, 0.30)
     plt.xticks(fontsize=19)
     plt.yticks(fontsize=19) # 11
@@ -1151,7 +1151,7 @@ def sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, error, T_Auro
     plt.plot(hours, T_arc_N, shape, label='arc - '+year)
     e = error[1]/2  # For 1.5 lim
     plt.errorbar(hours, T_arc_N, yerr=e, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
-    plt.ylabel(r"Occurence (norm.)", fontsize=15)
+    plt.ylabel(r"Occurrence (norm.)", fontsize=15)
     #plt.ylim(-0.2, 3)
     plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True) #, ncol=2
     #plot(hours, T_arc_N, 'arc', year, month=None, monthly=False)
@@ -1160,7 +1160,7 @@ def sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, error, T_Auro
     #plot(hours, T_diff_N, 'diffuse', year, month=None, monthly=False)
     plt.plot(hours, T_diff_N, shape, label='diffuse - '+year)
     plt.errorbar(hours, T_diff_N, yerr=error[2], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
-    plt.ylabel(r"Occurence (norm.)", fontsize=15)
+    plt.ylabel(r"Occurrence (norm.)", fontsize=15)
     #plt.ylim(0, 4)
     plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
 
@@ -1168,7 +1168,7 @@ def sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, error, T_Auro
     #plot(hours, T_disc_N, 'discrete', year, month=None, monthly=False)
     plt.plot(hours, T_disc_N, shape, label='discrete - '+year)
     plt.errorbar(hours, T_disc_N, yerr=error[3], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)    # elinewidth=0.1,
-    plt.ylabel(r"Occurence (norm.)", fontsize=15)
+    plt.ylabel(r"Occurrence (norm.)", fontsize=15)
     #plt.ylim(0, 4)
     plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
 
@@ -1177,7 +1177,7 @@ def sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, error, T_Auro
     plt.plot(hours, T_c_N, shape, label='no aurora - '+year)
     plt.errorbar(hours, T_c_N, yerr=error[0], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
     #plt.xlabel("Hour of the day", fontsize=13)
-    plt.ylabel(r"Occurence (norm.)", fontsize=15)
+    plt.ylabel(r"Occurrence (norm.)", fontsize=15)
     #plt.ylim(0, 4)
     plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
 
@@ -1187,7 +1187,7 @@ def sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, error, T_Auro
         plt.plot(hours, T_Aurora_N, shape, label='aurora - '+year)
         plt.errorbar(hours, T_Aurora_N, yerr=error[4], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
         plt.xlabel("Hour of the day", fontsize=15)
-        plt.ylabel(r"Occurence (norm.)", fontsize=15)
+        plt.ylabel(r"Occurrence (norm.)", fontsize=15)
         #plt.ylim(0, 4.5)
         plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
     else:
@@ -1383,8 +1383,8 @@ if __name__ == "__main__":
 
         # All 4 years, jan+nov+dec
         predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3.json'
-        #container_Full = DatasetContainer.from_json(predicted_G_Full)
-        #print("len container Full: ", len(container_Full))
+        container_Full = DatasetContainer.from_json(predicted_G_Full)
+        print("len container Full: ", len(container_Full))
         wl = [r'5577 Å', r'5577 Å', r'5577 Å', r'5577 Å']
 
     else:
@@ -1458,13 +1458,11 @@ if __name__ == "__main__":
 
     if Green:
         print('Green')
-        Bz_distribution_plots(path=r'stats/Green/b3/', wl=wl[0])
+        #Bz_distribution_plots(path=r'stats/Green/b3/', wl=wl[0])
     else:
         print('Red')
-        Bz_distribution_plots(path=r'stats/Red/b3/', wl=wl[0], Green=False)
+        #Bz_distribution_plots(path=r'stats/Red/b3/', wl=wl[0], Green=False)
 
-
-    exit()
 
     # Check entries with equal label probability
     #weights_and_stuff(wl=wl[0][:4])
@@ -1472,7 +1470,7 @@ if __name__ == "__main__":
 
     # Make hour plots (line plots)
     # Yearly
-    N = 4
+    N = 5
 
     plt.figure(figsize=(8, 11)) # bredde, hoyde
     Hour_subplot(container=container_Full, year="2014", wl=wl[0], N=N, month=False)
