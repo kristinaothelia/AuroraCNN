@@ -204,7 +204,7 @@ json_file = 'datasets/Full_aurora_ml_train_valid_set.json' # Train/validation fi
 
 MN = model_name[4]
 model = EfficientNet.from_name(model_name=MN, num_classes=4, in_channels=1)
-train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=125, batch_size_train=16, learningRate=0.01, stepSize=50, g=0.1)
+train(model, json_file, MN, mode='bilinear', w_sampler=False, ep=125, batch_size_train=8, learningRate=0.01, stepSize=50, g=0.1)
 
 exit()
 
