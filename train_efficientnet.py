@@ -202,13 +202,6 @@ def train(model, json_file, model_name, mode, w_sampler=False, no_weights=False,
 json_file = 'datasets/Full_aurora_ml_train_valid_set.json' # Train/validation file
 #test_file = 'datasets/Full_aurora_ml_test_set.json'
 
-MN = model_name[4]
-model = EfficientNet.from_name(model_name=MN, num_classes=4, in_channels=1)
-train(model, json_file, MN, mode='bilinear', w_sampler=True, ep=125, batch_size_train=8, learningRate=0.01, stepSize=75, g=0.1)
-
-exit()
-
-
 #model = EfficientNet.from_name(model_name=model_name[2], num_classes=4, in_channels=1)
 #train(model, json_file, model_name[2], ep=350, batch_size_train=16, learningRate=0.01, stepSize=300, g=1.1)
 
@@ -224,8 +217,8 @@ model = EfficientNet.from_name(model_name=MN, num_classes=4, in_channels=1)
 #train(model, json_file, model_name[2], mode='bilinear', w_sampler=False, ep=350, batch_size_train=32, learningRate=0.02, stepSize=150, g=0.5)
 #train(model, json_file, model_name[3], mode='bilinear', w_sampler=False, ep=350, batch_size_train=16, learningRate=0.02, stepSize=150, g=0.5)
 
-#train(model, json_file, model_name[3], mode='bilinear', w_sampler=True, ep=350, batch_size_train=16, learningRate=0.001, stepSize=250, g=0.05)
-
+train(model, json_file, model_name[3], mode='bilinear', w_sampler=True, ep=150, batch_size_train=24, learningRate=0.01, stepSize=75, g=0.1)
+exit()
 #train(model, json_file, model_name[3], mode='bilinear', w_sampler=False, ep=300, batch_size_train=8, learningRate=0.01, stepSize=250, g=0.5)
 
 #train(model, json_file, model_name[3], mode='bilinear', w_sampler=False, ep=250, batch_size_train=24, learningRate=0.01, stepSize=230, g=0.1)
