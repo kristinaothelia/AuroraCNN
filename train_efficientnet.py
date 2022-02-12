@@ -210,15 +210,20 @@ json_file = 'datasets/Full_aurora_ml_train_valid_set.json' # Train/validation fi
 #train(model, json_file, model_name[3], ep=200, batch_size_train=16, learningRate=0.1, stepSize=200, g=0.5)
 #train(model, json_file, model_name[3], ep=400, batch_size_train=16, learningRate=0.01, stepSize=350, g=0.5)
 #Res: 0.1: run longer. 0.01: overfitting
-MN = model_name[3]
+MN = model_name[2]
 # With weights in sampler
 model = EfficientNet.from_name(model_name=MN, num_classes=4, in_channels=1)
 #train(model, json_file, model_name[3], mode='bilinear', ep=300, batch_size_train=8, learningRate=0.01, stepSize=250, g=0.1)
 #train(model, json_file, model_name[2], mode='bilinear', w_sampler=False, ep=350, batch_size_train=32, learningRate=0.02, stepSize=150, g=0.5)
 #train(model, json_file, model_name[3], mode='bilinear', w_sampler=False, ep=350, batch_size_train=16, learningRate=0.02, stepSize=150, g=0.5)
 
-train(model, json_file, model_name[3], mode='bilinear', w_sampler=False, ep=200, batch_size_train=32, learningRate=0.01, stepSize=75, g=0.1)
-train(model, json_file, model_name[3], mode='bilinear', w_sampler=True, ep=200, batch_size_train=32, learningRate=0.01, stepSize=75, g=0.1)
+train(model, json_file, model_name[2], mode='bilinear', w_sampler=False, ep=200, batch_size_train=32, learningRate=0.01, stepSize=75, g=0.1)
+train(model, json_file, model_name[2], mode='bilinear', w_sampler=True, ep=200, batch_size_train=32, learningRate=0.01, stepSize=75, g=0.1)
+
+MN = model_name[1]
+model = EfficientNet.from_name(model_name=MN, num_classes=4, in_channels=1)
+train(model, json_file, model_name[1], mode='bilinear', w_sampler=False, ep=200, batch_size_train=64, learningRate=0.01, stepSize=75, g=0.1)
+train(model, json_file, model_name[1], mode='bilinear', w_sampler=True, ep=200, batch_size_train=64, learningRate=0.01, stepSize=75, g=0.1)
 exit()
 #train(model, json_file, model_name[3], mode='bilinear', w_sampler=False, ep=300, batch_size_train=8, learningRate=0.01, stepSize=250, g=0.5)
 
