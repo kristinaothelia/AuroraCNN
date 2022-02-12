@@ -1,0 +1,26 @@
+Model 4
+Class weights [1.0, 3.87375415282392, 1.938487115544472, 1.448447204968944]
+Training time [h]: 6.280679865943061
+The number of params in Million: 17.554924
+Best epoch 119 of 125. Validation acc: 0.8698677800974252
+Training loss: 0.2936509734224295. Validation loss: 0.31199144841724186
+Batch size (train): 8
+Other model info: lr:0.01, step:50, gamma:0.1
+V.acc all 200 epochs: 0.7966151704940848 pm 0.11040682020824655
+
+Weighted accuracy: 0.8622537435204393
+recall: 0.8698677800974252
+precision: 0.8826087455631388
+f1 score (all classes): [0.92957746 0.73837209 0.76383764 0.90909091]
+f1 score (w): 0.8729115957699283. acc (w): 0.8622537435204393
+
+              precision    recall  f1-score   support
+
+        no a       0.96      0.90      0.93       620
+         arc       0.62      0.91      0.74       139
+        diff       0.80      0.73      0.76       282
+        disc       0.92      0.90      0.91       396
+
+    accuracy                           0.87      1437
+   macro avg       0.82      0.86      0.84      1437
+weighted avg       0.88      0.87      0.87      1437
