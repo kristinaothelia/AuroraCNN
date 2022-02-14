@@ -648,7 +648,6 @@ def omni_ting(container, year_='2014', year=False):
 
     return a_less, arc, diff, disc, neg, pos, a_less_err, arc_err, diff_err, disc_err
 
-
 def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, error_list, T_Aurora_N=None, month_name=None,  N=4):
 
     # error_list = [a_less_errD, arc_errD, diff_errD, disc_errD, a_less_errN, arc_errN, diff_errN, disc_errN]
@@ -876,9 +875,7 @@ def subcategorybar(X, vals, leg, width=0.8):
     plt.xticks(_X, X)
 
 def stats_aurora(container, label, year=False, weight=False, Bz=False):
-    """
-    blabla
-    """
+
     Years = []
     Month = []
     Clock = []
@@ -895,25 +892,13 @@ def stats_aurora(container, label, year=False, weight=False, Bz=False):
                   "16": [0, 0], "17": [0, 0], "18": [0, 0], "19": [0, 0], \
                   "20": [0, 0], "21": [0, 0], "22": [0, 0], "23": [0, 0]}
 
-    def error_score(entry):
-        if entry.score[entry.label] >= 0.9:
-            #error_d.append(0.1)
-            return 0.1
-        elif entry.score[entry.label] >= 0.5 and entry.score[entry.label] < 0.9:
-            #error_d.append(0.3)
-            return 0.3
-        elif entry.score[entry.label] < 0.5:
-            #error_d.append(0.6)
-            return 0.6
 
     def data(entry, Years, Month, Clock, Hours, TH, max_score, error_hour, W=1, weight=False):
         Years.append(entry.timepoint[:4])
-        #Month.append(entry.timepoint[5:7])
-        #Clock.append(entry.timepoint[-8:])
         Hours.append(entry.timepoint[-8:-6])
         TH.append(entry.timepoint[5:7]+entry.timepoint[-8:-6]) # Month, day and hour
-        #max_score.append(entry.score[entry.label])
 
+        # Add error
         if entry.score[entry.label] >= 0.9:
             eps = 0.1
         elif entry.score[entry.label] >= 0.5 and entry.score[entry.label] < 0.9:
@@ -927,15 +912,11 @@ def stats_aurora(container, label, year=False, weight=False, Bz=False):
         edit = [old_score[0]+new_score, old_score[1]+1]
         error_hour.update({entry.timepoint[-8:-6]: edit})
 
-        #error_hour[entry.timepoint[-8:-6]] = list()
-        #error_hour[entry.timepoint[-8:-6]] = error_score(entry) #.extend(error)
-
-        #exit()
-
-
+        '''
         if weight:
             for i in range(W):
                 Hours.append(entry.timepoint[-8:-6])
+        '''
 
 
     def autolabel(n):
@@ -1011,7 +992,6 @@ def stats_aurora(container, label, year=False, weight=False, Bz=False):
             if weight:
 
                 if entry.score[entry.label] < 0.5:
-                    # No weight
                     W = 1
                     W = int(entry.score[entry.label]*100)
                     if label == LABELS[0] or LABELS[1] or LABELS[2] or LABELS[3]:
@@ -1024,7 +1004,6 @@ def stats_aurora(container, label, year=False, weight=False, Bz=False):
                             data(entry, Years, Month, Clock, Hours, TH, max_score, W, weight=True)
 
                 elif entry.score[entry.label] > 0.8:
-                    # weight x 3
                     W = 3
                     W = int(entry.score[entry.label]*100)
                     if label == LABELS[0] or LABELS[1] or LABELS[2] or LABELS[3]:
@@ -1037,7 +1016,6 @@ def stats_aurora(container, label, year=False, weight=False, Bz=False):
                             data(entry, Years, Month, Clock, Hours, TH, max_score, W, weight=True)
 
                 else:
-                    # weight x 2
                     W = 2
                     W = int(entry.score[entry.label]*100)
                     if label == LABELS[0] or LABELS[1] or LABELS[2] or LABELS[3]:
@@ -1056,7 +1034,6 @@ def stats_aurora(container, label, year=False, weight=False, Bz=False):
 
                 if label == "aurora": # arc, diffuse and discrete aurora is counted as one
                     if entry.label != LABELS[0]:
-                        #print(entry.timepoint) # YYYY-MM-DD hh:mm:ss
                         data(entry, Years, Month, Clock, Hours, TH, max_score, error_hour)
 
 
