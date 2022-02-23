@@ -216,17 +216,7 @@ class DatasetContainer(object):
                     location: str = None,
                     dataset_description: str = 'Some description',
                   ):
-        """
-        Add multiple files from folder
-        Args:
-            path (str, Path): Path to folder
-            datasetname (str): Name of dataset
-            dataset_type (str): The type of dataset this is
-            source (str): The source of the dataset (fastMRI)
-            dataset_description (str): description of dataset
-        returns:
-            DatasetContainer from folder
-        """
+
         if isinstance(path, str):
             path = Path(path)
         elif not isinstance(path, Path):

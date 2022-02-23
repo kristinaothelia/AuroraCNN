@@ -14,14 +14,25 @@ import operator
 
 LABELS = ['aurora-less', 'arc', 'diffuse', 'discrete']
 
-# All 4 years, jan+nov+dec
-predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3.json'
-predicted_R_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_R_omni_mean_predicted_efficientnet-b3.json'
-container_Full = DatasetContainer.from_json(predicted_G_Full)
-print("len container Full: ", len(container_Full))
+Green = False
+Green = True
+if Green:
+
+    # All 4 years, jan+nov+dec
+    predicted_G_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_G_omni_mean_predicted_efficientnet-b3.json'
+    container_Full = DatasetContainer.from_json(predicted_G_Full)
+    print("len container Full: ", len(container_Full))
+    wl = [r'5577 Å', r'5577 Å', r'5577 Å', r'5577 Å']
+
+else:
+    # All 4 years, jan+nov+dec
+    predicted_R_Full = r'C:\Users\Krist\Documents\ASI_json_files\AuroraFull_R_omni_mean_predicted_efficientnet-b3.json'
+    container_Full = DatasetContainer.from_json(predicted_R_Full)
+    print("len container Full: ", len(container_Full))
+    wl = [r'6300 Å', r'6300 Å', r'6300 Å', r'6300 Å']
 
 
-def aurora_Bz_stats(container, label, year_='2014', year=False):
+def aurora_Bz_stats(container, label, year_='2014', day_=None, year=False, day=False):
 
     input = 'Bz, nT (GSM)'
     Hours_POS = []
@@ -45,6 +56,23 @@ def aurora_Bz_stats(container, label, year_='2014', year=False):
                         else:
                             Hours_NEG.append(entry.timepoint[-8:-6])
 
+    elif day:
+        for entry in container:
+            if entry.timepoint[:10] == day_:
+                print(entry.timepoint, entry.label)
+                if label == LABELS[0] or LABELS[1] or LABELS[2] or LABELS[3]:
+                    if entry.label == label:
+                        if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
+                            Hours_POS.append(entry.timepoint[-8:-6])
+                        else:
+                            Hours_NEG.append(entry.timepoint[-8:-6])
+
+                if label == "aurora": # arc, diffuse and discrete aurora is counted as one
+                    if entry.label != LABELS[0]:
+                        if float(entry.solarwind[input]) != 9999.99 and float(entry.solarwind[input]) >= 0.0:
+                            Hours_POS.append(entry.timepoint[-8:-6])
+                        else:
+                            Hours_NEG.append(entry.timepoint[-8:-6])
     else:
         for entry in container:
 
@@ -166,6 +194,8 @@ def sub_plots(year, wl, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Auror
     '''
     #shape = '*-'
 
+    N = 5
+
     subplot(N,1,1)
     if month_name != None:
         plt.suptitle('Classification for positive and negative Bz, {} {} [{}]'.format(month_name, year, wl), fontsize=18)
@@ -182,7 +212,8 @@ def sub_plots(year, wl, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Auror
     #plt.text(6.5, 3.5, 'dayside', fontsize = 11, color='yellow')
     #plt.text(18.5, 3.5, 'nightside', fontsize = 11, color='deepskyblue')
     plt.title('arc', fontsize=15)
-    plt.ylabel("%", fontsize=15)
+    if N < 4:
+        plt.ylabel(r"Occurrence", fontsize=15)
     plt.ylim(-0.1, 2.1)
     plt.xticks(fontsize=11)
     plt.yticks(fontsize=11)
@@ -202,7 +233,8 @@ def sub_plots(year, wl, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Auror
     #plt.text(6.5, 3.5, 'dayside', fontsize = 11, color='yellow')
     #plt.text(18.5, 3.5, 'nightside', fontsize = 11, color='deepskyblue')
     plt.title('diffuse', fontsize=15)
-    plt.ylabel("%", fontsize=15)
+    if N < 4:
+        plt.ylabel(r"Occurrence", fontsize=15)
     plt.ylim(-0.1, 4.0)
     plt.xticks(fontsize=11)
     plt.yticks(fontsize=11)
@@ -219,7 +251,10 @@ def sub_plots(year, wl, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Auror
     #plt.text(6.5, 3.5, 'dayside', fontsize = 11, color='y')
     #plt.text(18.5, 3.5, 'nightside', fontsize = 11, color='deepskyblue')
     plt.title('discrete', fontsize=15)
-    plt.ylabel("%", fontsize=15)
+    if N > 4:
+        plt.ylabel(r"Occurrence (norm.)", fontsize=15)
+    else:
+        plt.ylabel(r"Occurrence", fontsize=15)
     plt.ylim(-0.1, 4.3)
     plt.xticks(fontsize=11)
     plt.yticks(fontsize=11)
@@ -237,7 +272,8 @@ def sub_plots(year, wl, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Auror
     #plt.text(18.5, 3.5, 'nightside', fontsize = 11, color='deepskyblue')
     plt.title('no aurora', fontsize=15)
     #plt.xlabel("Hour of the day", fontsize=13)
-    plt.ylabel("%", fontsize=15)
+    if N < 4:
+        plt.ylabel(r"Occurrence", fontsize=15)
     plt.xticks(fontsize=11)
     plt.yticks(fontsize=11)
     plt.ylim(-0.1, 4.6)
@@ -254,12 +290,11 @@ def sub_plots(year, wl, hours, name, T_c_N, T_arc_N, T_diff_N, T_disc_N, T_Auror
         #plt.text(0.5, 0.5, 'nightside', fontsize = 10, color='deepskyblue')
         #plt.text(6.5, 0.5, 'dayside', fontsize = 10, color='limegreen')
         #plt.text(18.5, 0.5, 'nightside', fontsize = 10, color='deepskyblue')
-        plt.title('aurora', fontsize=15)
+        plt.title('combined aurora classes', fontsize=15)
         plt.xlabel("Hour of the day", fontsize=15)
-        plt.ylabel("%", fontsize=15)
+        #plt.ylabel(r"Occurrence (norm.)", fontsize=15)
         plt.xticks(fontsize=11)
         plt.yticks(fontsize=11)
-        plt.ylim(-0.1, 4.6)
         #plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
     else:
         plt.xlabel("Hour of the day", fontsize=15, labelpad=25)
@@ -280,14 +315,18 @@ def Get_hours():
         times.append(str)
     return times
 
-def Hour_subplot(container, wl, year_="2014", month_name='Jan', N=4, month=False, weight=False, year=False):
+def Hour_subplot(container, wl, year_="2014", day_=None, month_name='Jan', N=4, month=False, weight=False, year=False, day=False):
 
     hours = Get_hours()
-    Hours_POS, Hours_NEG            = aurora_Bz_stats(container=container, label="aurora-less", year_=year_, year=year)
-    Hours_POS_arc, Hours_NEG_arc    = aurora_Bz_stats(container=container, label="arc", year_=year_, year=year)
-    Hours_POS_diff, Hours_NEG_diff  = aurora_Bz_stats(container=container, label="diffuse", year_=year_, year=year)
-    Hours_POS_disc, Hours_NEG_disc  = aurora_Bz_stats(container=container, label="discrete", year_=year_, year=year)
-    Hours_POS_A, Hours_NEG_A        = aurora_Bz_stats(container=container, label="aurora", year_=year_, year=year)
+    Hours_POS, Hours_NEG            = aurora_Bz_stats(container=container, label="aurora-less", year_=year_, day_=day_, year=year, day=day)
+    #Hours_POS_arc, Hours_NEG_arc    = aurora_Bz_stats(container=container, label="arc", year_=year_, year=year)
+    #Hours_POS_diff, Hours_NEG_diff  = aurora_Bz_stats(container=container, label="diffuse", year_=year_, year=year)
+    #Hours_POS_disc, Hours_NEG_disc  = aurora_Bz_stats(container=container, label="discrete", year_=year_, year=year)
+    #Hours_POS_A, Hours_NEG_A        = aurora_Bz_stats(container=container, label="aurora", year_=year_, year=year)
+    Hours_POS_arc, Hours_NEG_arc    = aurora_Bz_stats(container=container, label="arc", year_=year_, day_=day_, year=year, day=day)
+    Hours_POS_diff, Hours_NEG_diff  = aurora_Bz_stats(container=container, label="diffuse", year_=year_, day_=day_, year=year, day=day)
+    Hours_POS_disc, Hours_NEG_disc  = aurora_Bz_stats(container=container, label="discrete", year_=year_, day_=day_, year=year, day=day)
+    Hours_POS_A, Hours_NEG_A        = aurora_Bz_stats(container=container, label="aurora", year_=year_, day_=day_, year=year, day=day)
 
 
     if month:
@@ -393,9 +432,6 @@ def Hour_subplot(container, wl, year_="2014", month_name='Jan', N=4, month=False
         tot_sum_NEG = sum(T_c_NEG+T_arc_NEG+T_diff_NEG+T_disc_NEG)
         tot_sum_a_NEG = sum(T_arc_NEG+T_diff_NEG+T_disc_NEG)
 
-        #print(tot_sum)
-        #print("aurora: ", tot_sum_a, "aurora-less: ", sum(T_c))
-
         use_tot_sum = True
         if use_tot_sum:
 
@@ -427,6 +463,8 @@ def Hour_subplot(container, wl, year_="2014", month_name='Jan', N=4, month=False
                 T_Aurora_N_NEG.append((T_Aurora_NEG[i]/tot_sum_a_NEG)*100)
 
         #sub_plots(year, hours, T_c, T_arc, T_diff, T_disc, T_Aurora, N=5)
+        print(T_Aurora_N_POS)
+        print(T_Aurora_N_NEG)
 
         names = ["Bz >= 0", "Bz < 0"]
 
@@ -541,7 +579,7 @@ def Bz_stats(year):
         print('len container day:   ', len(container_D))
         print('len container night: ', len(container_N))
 
-    if year == 'All years':
+    if year == 'all years':
         a_less_POS, a_less_NEG, arc_POS, arc_NEG, diff_POS, diff_NEG, disc_POS, disc_NEG, a_less_POS_err, a_less_NEG_err, test_p, test_n = omni_ting(container_Full)
         #a_less_POS_D, a_less_NEG_D, arc_POS_D, arc_NEG_D, diff_POS_D, diff_NEG_D, disc_POS_D, disc_NEG_D, a_less_POS_err, a_less_NEG_err = omni_ting(container_D)
         #a_less_POS_N, a_less_NEG_N, arc_POS_N, arc_NEG_N, diff_POS_N, diff_NEG_N, disc_POS_N, disc_NEG_N, a_less_POS_err, a_less_NEG_err = omni_ting(container_N)
@@ -696,27 +734,40 @@ def Bz_stats(year):
 
 #exit()
 
-def Bz_split(container, year_="All years", month=False, year=False):
+def Bz_split(container, year_="all years", day_=None, month=False, year=False, day=False):
 
-    plt.figure(figsize=(8, 8)) # bredde, hoyde
-    Hour_subplot(container=container, wl='5577 Å', year_=year_, month=month, year=year)
+    #plt.figure(figsize=(8, 8)) # bredde, hoyde
+    plt.figure(figsize=(8, 11))
+    #Hour_subplot(container=container, wl='5577 Å', year_=year_, month=month, year=year)
+    if Green:
+        Hour_subplot(container=container, wl='5577 Å', year_=year_, day_=day_, month=month, year=year, day=day)
+    else:
+        Hour_subplot(container=container, wl='6300 Å', year_=year_, day_=day_, month=month, year=year, day=day)
+
+
     #Hour_subplot(container=container, wl='6300 Å', year_=year_, month=month, year=year)
     plt.text(1.5, -1.8, 'nightside', fontsize = 13, color='deepskyblue')
     plt.text(10.9, -1.8, 'dayside', fontsize = 13, color='limegreen')
     plt.text(19.1, -1.8, 'nightside', fontsize = 13, color='deepskyblue')
-    plt.savefig('stats/Green/b3/TEST_{}.png'.format(year_), bbox_inches="tight")
-    #plt.savefig('stats/Red/b3/TEST_{}_R.png'.format(year_), bbox_inches="tight")
+    if Green:
+        plt.savefig('stats/Green/b3/TEST_{}.png'.format(year_), bbox_inches="tight")
+    else:
+        plt.savefig('stats/Red/b3/TEST_{}_R.png'.format(year_), bbox_inches="tight")
     #plt.show()
 
 Bz_split(container=container_Full)
-Bz_split(container=container_Full, year_='2014', year=True)
-Bz_split(container=container_Full, year_='2016', year=True)
-Bz_split(container=container_Full, year_='2018', year=True)
-Bz_split(container=container_Full, year_='2020', year=True)
+#Bz_split(container=container_Full, year_='2014', year=True)
+#Bz_split(container=container_Full, year_='2016', year=True)
+#Bz_split(container=container_Full, year_='2018', year=True)
+#Bz_split(container=container_Full, year_='2020', year=True)
+
+# Test for a single day: (2016-01-11 has data for all 24 hours) (Plot title etc are not edited)
+#Bz_split(container=container_Full, day_='2016-01-11', day=True)
 exit()
 
 
 plt.figure(figsize=(8, 11)) # bredde, hoyde
+#plt.figure(figsize=(8, 14))
 Hour_subplot(container=container_Full, month=False, year=False)
 #Hour_subplot(container=container_Full, year_='2016', month=False, year=True)
 #Hour_subplot(container=container_Full, year_='2020', month=False, year=True)

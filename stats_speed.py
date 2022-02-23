@@ -710,7 +710,7 @@ if __name__ == "__main__":
         print("len container Full: ", len(container_Full))
         wl = [r'6300 Å', r'6300 Å', r'6300 Å', r'6300 Å']
 
-    # Average spped pr hour, for each aurora class.
+    # Average speed pr hour, for each aurora class.
     # Plot for each year, month?
 
     # Make hour plots (line plots)

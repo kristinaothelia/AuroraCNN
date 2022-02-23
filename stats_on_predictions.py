@@ -680,9 +680,9 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, error_list, T_Auro
     errD = errD[1:]
     errN = error_list[5]
     errN = errN[1:]
-    plt.plot(a_centers, a_heights, 'o-', label=r'dayside')
+    plt.plot(a_centers, a_heights, 'o-', label=r'daytime')
     plt.errorbar(a_centers, a_heights, xerr=errD, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
-    plt.plot(b_centers, b_heights, '*-', label=r'nightside')
+    plt.plot(b_centers, b_heights, '*-', label=r'nighttime')
     plt.errorbar(b_centers, b_heights, xerr=errN, fmt='none', ecolor='C1', elinewidth=0.7, capsize=2)
     plt.text(-19, 0.26, r'$B_z < 0$:  {:.1f}%'.format(neg[0][1]), fontsize = 19, color='C0')
     plt.text(4, 0.26, r'$B_z >= 0$: {:.1f}%'.format(pos[0][1]), fontsize = 19, color='C0')
@@ -717,9 +717,9 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, error_list, T_Auro
     plt.text(4, 0.26, r'$B_z >= 0$: {:.1f}%'.format(pos[0][2]), fontsize = 19, color='C0')
     plt.text(-19, 0.21, r'$B_z < 0$:  {:.1f}%'.format(neg[1][2]), fontsize = 19, color='C1')
     plt.text(4, 0.21, r'$B_z >= 0$: {:.1f}%'.format(pos[1][2]), fontsize = 19, color='C1')
-    plt.plot(a_centers, a_heights, 'o-', label=r'dayside')
+    plt.plot(a_centers, a_heights, 'o-', label=r'daytime')
     plt.errorbar(a_centers, a_heights, xerr=errD, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
-    plt.plot(b_centers, b_heights, '*-', label=r'nightside')
+    plt.plot(b_centers, b_heights, '*-', label=r'nighttime')
     plt.errorbar(b_centers, b_heights, xerr=errN, fmt='none', ecolor='C1', elinewidth=0.7, capsize=2)
     plt.axvline(x=0, ls='--', color='lightgrey')
     #plot(hours, T_diff_N, 'diffuse', year, month=None, monthly=False)
@@ -746,9 +746,9 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, error_list, T_Auro
     plt.text(4, 0.26, r'$B_z >= 0$: {:.1f}%'.format(pos[0][3]), fontsize = 19, color='C0')
     plt.text(-19, 0.21, r'$B_z < 0$:  {:.1f}%'.format(neg[1][3]), fontsize = 19, color='C1')
     plt.text(4, 0.21, r'$B_z >= 0$: {:.1f}%'.format(pos[1][3]), fontsize = 19, color='C1')
-    plt.plot(a_centers, a_heights, 'o-', label=r'dayside')
+    plt.plot(a_centers, a_heights, 'o-', label=r'daytime')
     plt.errorbar(a_centers, a_heights, xerr=errD, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
-    plt.plot(b_centers, b_heights, '*-', label=r'nightside')
+    plt.plot(b_centers, b_heights, '*-', label=r'nighttime')
     plt.errorbar(b_centers, b_heights, xerr=errN, fmt='none', ecolor='C1', elinewidth=0.7, capsize=2)
     plt.axvline(x=0, ls='--', color='lightgrey')
     #plot(hours, T_disc_N, 'discrete', year, month=None, monthly=False)
@@ -776,9 +776,9 @@ def sub_plots_Bz(year, wl, a_less, arc, diff, disc, neg, pos, error_list, T_Auro
     plt.text(4, 0.26, r'$B_z >= 0$: {:.1f}%'.format(pos[0][0]), fontsize = 19, color='C0')
     plt.text(-19, 0.21, r'$B_z < 0$:  {:.1f}%'.format(neg[1][0]), fontsize = 19, color='C1')
     plt.text(4, 0.21, r'$B_z >= 0$: {:.1f}%'.format(pos[1][0]), fontsize = 19, color='C1')
-    plt.plot(a_centers, a_heights, 'o-', label='dayside')
+    plt.plot(a_centers, a_heights, 'o-', label='daytime')
     plt.errorbar(a_centers, a_heights, xerr=errD, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
-    plt.plot(b_centers, b_heights, '*-', label=r'nightside')
+    plt.plot(b_centers, b_heights, '*-', label=r'nighttime')
     plt.errorbar(b_centers, b_heights, xerr=errN, fmt='none', ecolor='C1', elinewidth=0.7, capsize=2)
     plt.axvline(x=0, ls='--', color='lightgrey')
     #plot(hours, T_c_N, 'no aurora', year, month=None, monthly=False, axis=True)
@@ -1117,60 +1117,76 @@ def sub_plots(year, wl, hours, T_c_N, T_arc_N, T_diff_N, T_disc_N, error, T_Auro
     else:
         shape = 'x-'
 
-    subplot(N,1,1)
-    if month_name != None:
-        plt.title('Statistics ({}) for all classes [{}]'.format(month_name, wl), fontsize=18)
-    else:
-        if len(year) > 4:
-            plt.title('Yearly statistics for all classes (weighted) [{}]'.format(wl), fontsize=18)
-        else:
-            plt.title('Yearly statistics for all classes [{}]'.format(wl), fontsize=18)
-    plt.plot(hours, T_arc_N, shape, label='arc - '+year)
-    e = error[1]/2  # For 1.5 lim
-    plt.errorbar(hours, T_arc_N, yerr=e, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
-    plt.ylabel(r"Occurrence (norm.)", fontsize=15)
-    #plt.ylim(-0.2, 3)
-    plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True) #, ncol=2
-    #plot(hours, T_arc_N, 'arc', year, month=None, monthly=False)
+    if N == 1:
 
-    subplot(N,1,2)
-    #plot(hours, T_diff_N, 'diffuse', year, month=None, monthly=False)
-    plt.plot(hours, T_diff_N, shape, label='diffuse - '+year)
-    plt.errorbar(hours, T_diff_N, yerr=error[2], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
-    plt.ylabel(r"Occurrence (norm.)", fontsize=15)
-    #plt.ylim(0, 4)
-    plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
-
-    subplot(N,1,3)
-    #plot(hours, T_disc_N, 'discrete', year, month=None, monthly=False)
-    plt.plot(hours, T_disc_N, shape, label='discrete - '+year)
-    plt.errorbar(hours, T_disc_N, yerr=error[3], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)    # elinewidth=0.1,
-    plt.ylabel(r"Occurrence (norm.)", fontsize=15)
-    #plt.ylim(0, 4)
-    plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
-
-    subplot(N,1,4)
-    #plot(hours, T_c_N, 'no aurora', year, month=None, monthly=False, axis=True)
-    plt.plot(hours, T_c_N, shape, label='no aurora - '+year)
-    plt.errorbar(hours, T_c_N, yerr=error[0], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
-    #plt.xlabel("Hour of the day", fontsize=13)
-    plt.ylabel(r"Occurrence (norm.)", fontsize=15)
-    #plt.ylim(0, 4)
-    plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
-
-    if N == 5:
-        subplot(N,1,5)
-        #plot(hours, T_c_N, 'no aurora', year, month=None, monthly=False, axis=True)
+        plt.title('Yearly statistics for combined aurora classes [{}]'.format(wl), fontsize=18)
         plt.plot(hours, T_Aurora_N, shape, label='aurora - '+year)
         plt.errorbar(hours, T_Aurora_N, yerr=error[4], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
         plt.xlabel("Hour of the day", fontsize=15)
         plt.ylabel(r"Occurrence (norm.)", fontsize=15)
         #plt.ylim(0, 4.5)
         plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
-    else:
-        plt.xlabel("Hour of the day", fontsize=15)
 
-    #plt.tight_layout(rect=[0,0,0.75,1])
+    else:
+
+        subplot(N,1,1)
+        if month_name != None:
+            plt.title('Statistics ({}) for all classes [{}]'.format(month_name, wl), fontsize=18)
+        else:
+            if len(year) > 4:
+                plt.title('Yearly statistics for all classes (weighted) [{}]'.format(wl), fontsize=18)
+            else:
+                plt.title('Yearly statistics for all classes [{}]'.format(wl), fontsize=18)
+        plt.plot(hours, T_arc_N, shape, label='arc - '+year)
+        e = error[1]/2  # For 1.5 lim
+        plt.errorbar(hours, T_arc_N, yerr=e, fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+        if N != 5:
+            plt.ylabel(r"Occurrence (norm.)", fontsize=15)
+        #plt.ylim(-0.2, 3)
+        plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True) #, ncol=2
+        #plot(hours, T_arc_N, 'arc', year, month=None, monthly=False)
+
+        subplot(N,1,2)
+        #plot(hours, T_diff_N, 'diffuse', year, month=None, monthly=False)
+        plt.plot(hours, T_diff_N, shape, label='diffuse - '+year)
+        plt.errorbar(hours, T_diff_N, yerr=error[2], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+        if N != 5:
+            plt.ylabel(r"Occurrence (norm.)", fontsize=15)
+        #plt.ylim(0, 4)
+        plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
+
+        subplot(N,1,3)
+        #plot(hours, T_disc_N, 'discrete', year, month=None, monthly=False)
+        plt.plot(hours, T_disc_N, shape, label='discrete - '+year)
+        plt.errorbar(hours, T_disc_N, yerr=error[3], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)    # elinewidth=0.1,
+        plt.ylabel(r"Occurrence (norm.)", fontsize=15)
+        #plt.ylim(0, 4)
+        plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
+
+        subplot(N,1,4)
+        #plot(hours, T_c_N, 'no aurora', year, month=None, monthly=False, axis=True)
+        plt.plot(hours, T_c_N, shape, label='no aurora - '+year)
+        plt.errorbar(hours, T_c_N, yerr=error[0], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+        #plt.xlabel("Hour of the day", fontsize=13)
+        if N != 5:
+            plt.ylabel(r"Occurrence (norm.)", fontsize=15)
+        #plt.ylim(0, 4)
+        plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
+
+        if N == 5:
+            subplot(N,1,5)
+            #plt.title('Yearly statistics for combined aurora classes [{}]'.format(wl), fontsize=18)
+            #plot(hours, T_c_N, 'no aurora', year, month=None, monthly=False, axis=True)
+            plt.plot(hours, T_Aurora_N, shape, label='aurora - '+year)
+            plt.errorbar(hours, T_Aurora_N, yerr=error[4], fmt='none', ecolor='k', elinewidth=0.7, capsize=2)
+            plt.xlabel("Hour of the day", fontsize=15)
+            #plt.ylabel(r"Occurrence (norm.)", fontsize=15)
+            #plt.ylim(0, 4.5)
+            plt.legend(fontsize=13, bbox_to_anchor = (1.05, 0.95), shadow=True)
+        else:
+            plt.xlabel("Hour of the day", fontsize=15)
+
+        #plt.tight_layout(rect=[0,0,0.75,1])
 
 
 def Hour_subplot(container, year, wl, month_name='Jan', N=4, month=False, weight=False):
@@ -1355,7 +1371,7 @@ if __name__ == "__main__":
 
     LABELS = ['aurora-less', 'arc', 'diffuse', 'discrete']
 
-    Green = False
+    Green = True
     if Green:
 
         # All 4 years, jan+nov+dec
@@ -1440,16 +1456,22 @@ if __name__ == "__main__":
         print('Red')
         #Bz_distribution_plots(path=r'stats/Red/b3/', wl=wl[0], Green=False)
 
-
     # Check entries with equal label probability
     #weights_and_stuff(wl=wl[0][:4])
 
 
     # Make hour plots (line plots)
     # Yearly
-    N = 5
+    N = 4 # Classes
+    N = 5 # Classes and Aurora
+    #N = 1 # Aurora
 
-    plt.figure(figsize=(8, 11)) # bredde, hoyde
+    if N == 1:
+        plt.figure(figsize=(8, 3)) # default 6.4x4.8
+    if N == 5:
+        plt.figure(figsize=(8, 14)) # bredde, hoyde
+    else:
+        plt.figure(figsize=(8, 11)) # bredde, hoyde
     Hour_subplot(container=container_Full, year="2014", wl=wl[0], N=N, month=False)
     Hour_subplot(container=container_Full, year="2016", wl=wl[0], N=N, month=False)
     Hour_subplot(container=container_Full, year="2018", wl=wl[0], N=N, month=False)
@@ -1457,9 +1479,10 @@ if __name__ == "__main__":
 
     if Green:
         plt.savefig("stats/Green/b3/yearly_hour_plot_{}.png".format(N), bbox_inches="tight")
+        #plt.show()
     else:
         plt.savefig("stats/Red/b3/yearly_hour_plot_R_{}.png".format(N), bbox_inches="tight")
-    #plt.show()
+        #plt.show()
 
     exit()
 

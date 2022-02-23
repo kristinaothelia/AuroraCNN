@@ -52,7 +52,6 @@ def train(model, json_file, model_name, mode, w_sampler=False, no_weights=False,
         return container
 
     container = remove_noLabel_img(container)
-    #train, valid = container.split(seed=42, split=0.8)
     train, valid = container.split(seed=42, split=0.8)
 
     def count(container):
@@ -76,9 +75,6 @@ def train(model, json_file, model_name, mode, w_sampler=False, no_weights=False,
     class_weights = [clear/clear, (clear/arc)*1.5, (clear/diff)*1.5, (clear/disc)*1.5]
     print("class count, train: ", [clear, arc, diff, disc])
     print("weights, train:     ", class_weights)
-
-    # Try diffuse x 3?
-    #exit()
 
     img_size = efficientnet_params(model_name)['resolution']
     # rotation class: numpy arrays. Padding class: pytorch tensors
